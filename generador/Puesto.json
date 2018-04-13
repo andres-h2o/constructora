@@ -1,0 +1,74 @@
+{
+  "fields": [
+    {
+      "name": "nro",
+      "type": "integer"
+    },
+    {
+      "name": "largo",
+      "type": "double"
+    },
+    {
+      "name": "ancho",
+      "type": "double"
+    },
+    {
+      "name": "latitud",
+      "type": "double"
+    },
+    {
+      "name": "longitud",
+      "type": "double"
+    },
+    {
+      "name": "estado",
+      "type": "string"
+    },{
+      "name": "id_bloque",
+      "type": "integer#unsigned"
+    },{
+      "name": "id_categoria",
+      "type": "integer#unsigned"
+    }
+  ],
+  "validations": [
+    {
+      "field": "nombre",
+      "rules": "required"
+    },
+    {
+      "field": "largo",
+      "rules": "required"
+    },
+    {
+      "field": "ancho",
+      "rules": "required"
+    },
+    {
+      "field": "latitud",
+      "rules": "required"
+    },
+    {
+      "field": "longitud",
+      "rules": "required"
+    },
+    {
+      "field": "estado",
+      "rules": "required"
+    }],
+	 "foreign_keys": [
+    {
+      "column": "id_bloque",
+      "references": "id",
+      "on": "bloques",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    } ,{
+      "column": "id_categoria",
+      "references": "id",
+      "on": "categorias",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    }
+  ]
+}

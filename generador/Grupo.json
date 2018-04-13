@@ -1,0 +1,38 @@
+{
+  "fields": [
+    {
+      "name": "nombre",
+      "type": "string"
+    },
+    {
+      "name": "detalle",
+      "type": "string"
+    },
+    {
+      "name": "id_coordinador",
+      "type": "string"
+    }
+  ],
+  "validations": [
+    {
+      "field": "nombre",
+      "rules": "required"
+    },
+    {
+      "field": "detalle",
+      "rules": "required"
+    },
+    {
+      "field": "id_coordinador",
+      "rules": "required"
+    }],
+	"foreign_keys": [
+    {
+      "column": "id_coordinador",
+      "references": "id",
+      "on": "coordinadors",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    }
+  ]
+}

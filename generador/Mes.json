@@ -1,0 +1,60 @@
+{
+  "fields": [
+    {
+      "name": "ventas_contado",
+      "type": "double"
+    },
+    {
+      "name": "monto_ventas_contado",
+      "type": "double"
+    },{
+      "name": "ventas_credito",
+      "type": "double"
+    },
+    {
+      "name": "monto_ventas_credito",
+      "type": "double"
+    },{
+      "name": "nro_reservas",
+      "type": "integer"
+    },{
+      "name": "fecha_inicio",
+      "type": "date"
+    },{
+      "name": "fecha_cierre",
+      "type": "date"
+    },{
+      "name": "estado",
+      "type": "integer"
+    }
+  ],
+  "validations": [
+    {
+      "field": "ventas_contado",
+      "rules": "required"
+    },
+    {
+      "field": "monto_ventas_contado",
+      "rules": "required"
+    },
+    {
+      "field": "ventas_credito",
+      "rules": "required"
+    },{
+      "field": "monto_ventas_credito",
+      "rules": "required"
+    },{
+      "field": "nro_reservas",
+      "rules": "required"
+    },{
+      "field": "fecha_inicio",
+      "rules": "required"
+    },{
+      "field": "fecha_cierre",
+      "rules": "required"
+    },{
+      "field": "estado",
+      "rules": "required"
+    }
+  ]
+}

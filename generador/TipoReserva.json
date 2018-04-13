@@ -1,0 +1,36 @@
+{
+  "fields": [
+    {
+      "name": "nombre",
+      "type": "string"
+    },
+    {
+      "name": "dias",
+      "type": "integer"
+    },{
+      "name": "dias_reales",
+      "type": "integer"
+    },
+    {
+      "name": "definitivo",
+      "type": "integer"
+    }
+  ],
+  "validations": [
+    {
+      "field": "nombre",
+      "rules": "required"
+    },
+    {
+      "field": "dias",
+      "rules": "required"
+    },
+    {
+      "field": "dias_reales",
+      "rules": "required"
+    },{
+      "field": "definitivo",
+      "rules": "required"
+    }
+  ]
+}

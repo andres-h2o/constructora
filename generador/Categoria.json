@@ -1,0 +1,69 @@
+{
+  "fields": [
+    {
+      "name": "nombre",
+      "type": "string"
+    },
+    {
+      "name": "color",
+      "type": "string"
+    },
+    {
+      "name": "precio",
+      "type": "double"
+    },
+    {
+      "name": "cuota_inicial",
+      "type": "double"
+    },
+    {
+      "name": "cuota_mensual",
+      "type": "double"
+    },
+    {
+      "name": "plazo_meses",
+      "type": "integer"
+    },{
+      "name": "id_proyecto",
+      "type": "integer#unsigned"
+    }
+  ],
+  "validations": [
+    {
+      "field": "nombre",
+      "rules": "required"
+    },
+    {
+      "field": "color",
+      "rules": "required"
+    },
+    {
+      "field": "precio",
+      "rules": "required"
+    },
+    {
+      "field": "cuota_inicial",
+      "rules": "required"
+    },
+    {
+      "field": "cuota_mensual",
+      "rules": "required"
+    },
+    {
+      "field": "plazo_meses",
+      "rules": "required"
+    },
+    {
+      "field": "id_proyecto",
+      "rules": "required"
+    }],
+	 "foreign_keys": [
+    {
+      "column": "id_proyecto",
+      "references": "id",
+      "on": "proyectos",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    }
+  ]
+}

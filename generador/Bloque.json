@@ -1,0 +1,29 @@
+{
+  "fields": [
+    {
+      "name": "numero",
+      "type": "integer"
+    },{
+      "name": "id_modulo",
+      "type": "integer#unsigned"
+    }
+  ],
+  "validations": [
+    {
+      "field": "numero",
+      "rules": "required"
+    },
+    {
+      "field": "id_modulo",
+      "rules": "required"
+    }],
+  "foreign_keys": [
+    {
+      "column": "id_modulo",
+      "references": "id",
+      "on": "modulos",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    }
+  ]
+}

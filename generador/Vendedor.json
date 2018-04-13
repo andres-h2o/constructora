@@ -1,0 +1,71 @@
+{
+  "fields": [
+    {
+      "name": "nombre",
+      "type": "string"
+    },
+    {
+      "name": "telefono",
+      "type": "integer"
+    },
+    {
+      "name": "direccion",
+      "type": "string"
+    },
+    {
+      "name": "estado",
+      "type": "integer"
+    },
+    {
+      "name": "codigo",
+      "type": "integer"
+    },
+    {
+      "name": "ci",
+      "type": "string"
+    },
+    {
+      "name": "id_grupo",
+      "type": "integer#unsigned"
+    }
+  ],
+  "validations": [
+    {
+      "field": "nombre",
+      "rules": "string"
+    },
+    {
+      "field": "telefono",
+      "rules": "integer"
+    },
+    {
+      "field": "direccion",
+      "rules": "string"
+    },
+    {
+      "field": "estado",
+      "rules": "integer"
+    },
+    {
+      "field": "codigo",
+      "rules": "integer"
+    },
+    {
+      "field": "ci",
+      "rules": "string"
+    },
+    {
+      "field": "id_grupo",
+      "rules": "integer#unsigned"
+    }
+  ],
+  "foreign_keys": [
+    {
+      "column": "id_grupo",
+      "references": "id",
+      "on": "grupos",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "fields": [
+    {
+      "name": "fecha",
+      "type": "date"
+    },{
+      "name": "monto",
+      "type": "double"
+    },{
+      "name": "fecha_fin",
+      "type": "date"
+    },{
+      "name": "dias",
+      "type": "integer"
+    },{
+      "name": "id_puesto",
+     "type": "integer#unsigned"
+    },{
+      "name": "id_vendedor",
+     "type": "integer#unsigned"
+    },{
+      "name": "id_tipoReserva",
+      "type": "integer#unsigned"
+    },{
+      "name": "id_mes",
+      "type": "integer#unsigned"
+    }
+  ],
+  "validations": [
+    {
+      "field": "fecha",
+      "rules": "required"
+    },
+    {
+      "field": "monto",
+      "rules": "required"
+    },
+    {
+      "field": "fecha_fin",
+      "rules": "required"
+    },{
+      "field": "dias",
+      "rules": "required"
+    },{
+      "field": "id_puesto",
+      "rules": "required"
+    },{
+      "field": "id_mes",
+      "rules": "required"
+    },{
+      "field": "id_tipoReserva",
+      "rules": "required"
+    },{
+      "field": "id_vendedor",
+      "rules": "required"
+    }],
+  "foreign_keys": [
+     {
+      "column": "id_puesto",
+      "references": "id",
+      "on": "puestos",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    } ,{
+      "column": "id_vendedor",
+      "references": "id",
+      "on": "vendedors",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    }, {
+      "column": "id_tipoReserva",
+      "references": "id",
+      "on": "reservas",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    } ,{
+      "column": "id_mes",
+      "references": "id",
+      "on": "mess",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "fields": [
+    {
+      "name": "nombre",
+      "type": "string"
+    },
+    {
+      "name": "telefono",
+      "type": "integer"
+    },
+    {
+      "name": "direccion",
+      "type": "string"
+    }
+  ],
+  "validations": [
+    {
+      "field": "nombre",
+      "rules": "required"
+    },
+    {
+      "field": "telefono",
+      "rules": "required"
+    },
+    {
+      "field": "direccion",
+      "rules": "required"
+    }
+  ]
+}

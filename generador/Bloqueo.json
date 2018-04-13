@@ -1,0 +1,46 @@
+{
+  "fields": [
+    {
+      "name": "estado",
+      "type": "date"
+    },
+    {
+      "name": "id_puesto",
+      "type": "integer#unsigned"
+    },
+    {
+      "name": "id_vendedor",
+      "type": "integer#unsigned"
+    }
+  ],
+  "validations": [
+    {
+      "field": "estado",
+      "rules": "required"
+    },
+    {
+      "field": "id_puesto",
+      "rules": "required"
+    },
+    {
+      "field": "id_vendedor",
+      "rules": "required"
+    }
+  ],
+  "foreign_keys": [
+    {
+      "column": "id_puesto",
+      "references": "id",
+      "on": "puestos",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    },
+    {
+      "column": "id_vendedor",
+      "references": "id",
+      "on": "vendedors",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    }
+  ]
+}
