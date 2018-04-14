@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class BloqueController extends Controller
 {
-
+    /*que es esto?*/
     public function __construct()
     {
         $this->middleware('auth');
