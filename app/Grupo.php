@@ -25,7 +25,7 @@ class Grupo extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre', 'detalle', 'id_coordinador'];
+    protected $fillable = ['nombre', 'detalle', 'id_proyecto', 'id_coordinador'];
 
     
 }

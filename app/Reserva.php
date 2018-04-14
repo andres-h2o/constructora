@@ -25,7 +25,7 @@ class Reserva extends Model
      *
      * @var array
      */
-    protected $fillable = ['fecha', 'monto', 'fecha_fin', 'dias', 'id_puesto', 'id_vendedor', 'id_tipoReserva', 'id_mes'];
+    protected $fillable = ['fecha', 'monto', 'fecha_fin', 'dias','estado', 'id_puesto', 'id_vendedor','id_cliente', 'id_tipoReserva', 'id_mes'];
 
     
 }

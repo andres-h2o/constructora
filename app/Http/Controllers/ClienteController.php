@@ -5,18 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Bloque;
-use App\Modulo;
-use App\Proyecto;
+use App\Cliente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
-class BloqueController extends Controller
+class ClienteController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -28,14 +22,16 @@ class BloqueController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $bloque = Bloque::where('numero', 'LIKE', "%$keyword%")
-                ->orWhere('id_modulo', 'LIKE', "%$keyword%")
+            $cliente = Cliente::where('nombre', 'LIKE', "%$keyword%")
+                ->orWhere('telefono', 'LIKE', "%$keyword%")
+                ->orWhere('direccion', 'LIKE', "%$keyword%")
+                ->orWhere('estado', 'LIKE', "%$keyword%")
                 ->latest()->paginate($perPage);
         } else {
-            $bloque = Bloque::latest()->paginate($perPage);
+            $cliente = Cliente::latest()->paginate($perPage);
         }
 
-        return view('bloque.index', compact('bloque'));
+        return view('cliente.index', compact('cliente'));
     }
 
     /**
@@ -45,7 +41,7 @@ class BloqueController extends Controller
      */
     public function create()
     {
-        return view('bloque.create');
+        return view('cliente.create');
     }
 
     /**
@@ -58,14 +54,16 @@ class BloqueController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'numero' => 'required',
-			'id_modulo' => 'required'
+			'nombre' => 'string',
+			'telefono' => 'integer',
+			'direccion' => 'string',
+			'estado' => 'integer'
 		]);
         $requestData = $request->all();
         
-        Bloque::create($requestData);
+        Cliente::create($requestData);
 
-        return redirect('bloque')->with('flash_message', 'Bloque added!');
+        return redirect('cliente')->with('flash_message', 'Cliente added!');
     }
 
     /**
@@ -77,9 +75,9 @@ class BloqueController extends Controller
      */
     public function show($id)
     {
-        $bloque = Bloque::findOrFail($id);
+        $cliente = Cliente::findOrFail($id);
 
-        return view('bloque.show', compact('bloque'));
+        return view('cliente.show', compact('cliente'));
     }
 
     /**
@@ -91,9 +89,9 @@ class BloqueController extends Controller
      */
     public function edit($id)
     {
-        $bloque = Bloque::findOrFail($id);
+        $cliente = Cliente::findOrFail($id);
 
-        return view('bloque.edit', compact('bloque'));
+        return view('cliente.edit', compact('cliente'));
     }
 
     /**
@@ -107,15 +105,17 @@ class BloqueController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-			'numero' => 'required',
-			'id_modulo' => 'required'
+			'nombre' => 'string',
+			'telefono' => 'integer',
+			'direccion' => 'string',
+			'estado' => 'integer'
 		]);
         $requestData = $request->all();
         
-        $bloque = Bloque::findOrFail($id);
-        $bloque->update($requestData);
+        $cliente = Cliente::findOrFail($id);
+        $cliente->update($requestData);
 
-        return redirect('bloque')->with('flash_message', 'Bloque updated!');
+        return redirect('cliente')->with('flash_message', 'Cliente updated!');
     }
 
     /**
@@ -127,22 +127,16 @@ class BloqueController extends Controller
      */
     public function destroy($id)
     {
-        Bloque::destroy($id);
+        Cliente::destroy($id);
 
-        return redirect('bloque')->with('flash_message', 'Bloque deleted!');
+        return redirect('cliente')->with('flash_message', 'Cliente deleted!');
     }
 
-    public function listar($id_proyecto)
+    public function clietesVendedor()
     {
-        $modulos = Modulo::_getModulosProyecto($id_proyecto)->get();
-        $var =1;
-        $bloques[''.$var]='';
-        foreach($modulos as $modulo){
-            $bloques[''.$var] = (Bloque::_getBloquesModulo($modulo->id)->get());
-            $var = $var +1;
-        }
-        $proyecto=Proyecto::find($id_proyecto);
 
-        return view('proyecto.bloques', compact('bloques','proyecto'));
+        $id_vendedor = Input::get('id_vendedor');
+        $clientes = Cliente::where('id_vendedor','-',$id_vendedor)->get();
+        return response()->json($clientes);
     }
 }

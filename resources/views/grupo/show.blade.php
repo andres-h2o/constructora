@@ -2,10 +2,9 @@
 
 @section('contenido')
     <div class="container">
-        <div class="row">
 
 
-        <div class="col-md-9">
+    <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">Grupo {{ $grupo->id }}</div>
                     <div class="card-body">
@@ -27,7 +26,7 @@
                                     <tr>
                                         <th>ID</th><td>{{ $grupo->id }}</td>
                                     </tr>
-                                    <tr><th> Nombre </th><td> {{ $grupo->nombre }} </td></tr><tr><th> Detalle </th><td> {{ $grupo->detalle }} </td></tr><tr><th> Id Coordinador </th><td> {{ $grupo->id_coordinador }} </td></tr>
+                                    <tr><th> Nombre </th><td> {{ $grupo->nombre }} </td></tr><tr><th> Detalle </th><td> {{ $grupo->detalle }} </td></tr><tr><th> Id Proyecto </th><td> {{ $grupo->id_proyecto }} </td></tr>
                                 </tbody>
                             </table>
                         </div>

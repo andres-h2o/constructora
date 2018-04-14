@@ -27,5 +27,14 @@ class Vendedor extends Model
      */
     protected $fillable = ['nombre', 'telefono', 'direccion', 'estado', 'codigo', 'ci', 'id_grupo'];
 
-    
+    public function scope_getVendedoresProyecto($query,$id_proyecto)
+    {
+        $vendedores = $query->join('grupos as g','g.id','id_grupo')
+            ->where('g.id_proyecto','=',$id_proyecto)
+            ->select(
+                'vendedors.nombre as nombre',
+                'vendedors.id as id'
+            )->orderBy('vendedors.nombre','asc');
+        return $vendedores;
+    }
 }

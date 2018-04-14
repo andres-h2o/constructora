@@ -27,5 +27,9 @@ class Modulo extends Model
      */
     protected $fillable = ['nro', 'id_proyecto'];
 
-    
+    public function scope_getModulosProyecto($query, $id_proyecto)
+    {
+        $modulos = $query->where('id_proyecto',$id_proyecto)->orderBy('nro','asc');
+        return $modulos;
+   }
 }

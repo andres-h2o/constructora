@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ventum extends Model
+class Cliente extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'ventas';
+    protected $table = 'clientes';
 
     /**
     * The database primary key value.
@@ -25,7 +25,7 @@ class Ventum extends Model
      *
      * @var array
      */
-    protected $fillable = ['fecha', 'monto', 'id_puesto', 'id_vendedor','id_cliente', 'id_mes', 'id_tipo_venta'];
+    protected $fillable = ['nombre', 'telefono', 'direccion', 'estado','id_vendedor'];
 
     
 }

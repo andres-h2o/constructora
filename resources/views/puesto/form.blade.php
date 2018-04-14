@@ -19,13 +19,13 @@
 </div><div class="form-group {{ $errors->has('latitud') ? 'has-error' : ''}}">
     <label for="latitud" class="col-md-4 control-label">{{ 'Latitud' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="latitud" type="number" id="latitud" value="{{ $puesto->latitud or ''}}" required>
+        <input class="form-control" step="any" name="latitud" type="number" id="latitud" value="{{ $puesto->latitud or ''}}" required>
         {!! $errors->first('latitud', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('longitud') ? 'has-error' : ''}}">
     <label for="longitud" class="col-md-4 control-label">{{ 'Longitud' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="longitud" type="number" id="longitud" value="{{ $puesto->longitud or ''}}" required>
+        <input class="form-control" step="any" name="longitud" type="number" id="longitud" value="{{ $puesto->longitud or ''}}" required>
         {!! $errors->first('longitud', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('estado') ? 'has-error' : ''}}">

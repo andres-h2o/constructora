@@ -17,9 +17,11 @@ class CreateGruposTable extends Migration
             $table->timestamps();
             $table->string('nombre')->nullable();
             $table->string('detalle')->nullable();
-            $table->integer('id_coordinador')->unsigned()->nullable();
+            $table->integer('id_proyecto')->unsigned();
+            $table->integer('id_coordinador')->unsigned();
+            $table->foreign('id_proyecto')->references('id')->on('proyectos')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('id_coordinador')->references('id')->on('coordinadors')->onDelete('cascade')->onUpdate('cascade');
-            });
+        });
     }
 
     /**

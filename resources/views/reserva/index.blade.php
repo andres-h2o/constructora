@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 
 @section('contenido')
+    @include('alerts.request')
+    @include('alerts.success')
+    @include('alerts.existfail')
     <div class="container">
         <div class="row">
 

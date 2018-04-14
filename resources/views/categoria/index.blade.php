@@ -36,7 +36,7 @@
                                 @foreach($categoria as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->nombre }}</td><td>{{ $item->color }}</td><td>{{ $item->precio }}</td>
+                                        <td>{{ $item->nombre }}</td><td style="background-color: {{ $item->color }}"></td><td>{{ $item->precio }} $us</td>
                                         <td>
                                             <a href="{{ url('/categoria/' . $item->id) }}" title="View Categorium"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/categoria/' . $item->id . '/edit') }}" title="Edit Categorium"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

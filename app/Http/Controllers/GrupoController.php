@@ -10,6 +10,10 @@ use Illuminate\Http\Request;
 
 class GrupoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -23,6 +27,7 @@ class GrupoController extends Controller
         if (!empty($keyword)) {
             $grupo = Grupo::where('nombre', 'LIKE', "%$keyword%")
                 ->orWhere('detalle', 'LIKE', "%$keyword%")
+                ->orWhere('id_proyecto', 'LIKE', "%$keyword%")
                 ->orWhere('id_coordinador', 'LIKE', "%$keyword%")
                 ->latest()->paginate($perPage);
         } else {
@@ -54,6 +59,7 @@ class GrupoController extends Controller
         $this->validate($request, [
 			'nombre' => 'required',
 			'detalle' => 'required',
+			'id_proyecto' => 'required',
 			'id_coordinador' => 'required'
 		]);
         $requestData = $request->all();
@@ -104,6 +110,7 @@ class GrupoController extends Controller
         $this->validate($request, [
 			'nombre' => 'required',
 			'detalle' => 'required',
+			'id_proyecto' => 'required',
 			'id_coordinador' => 'required'
 		]);
         $requestData = $request->all();

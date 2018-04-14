@@ -9,8 +9,12 @@
       "type": "string"
     },
     {
+      "name": "id_proyecto",
+      "type": "integer#unsigned"
+    },
+    {
       "name": "id_coordinador",
-      "type": "string"
+      "type": "integer#unsigned"
     }
   ],
   "validations": [
@@ -23,10 +27,22 @@
       "rules": "required"
     },
     {
+      "field": "id_proyecto",
+      "rules": "required"
+    },
+    {
       "field": "id_coordinador",
       "rules": "required"
-    }],
-	"foreign_keys": [
+    }
+  ],
+  "foreign_keys": [
+    {
+      "column": "id_proyecto",
+      "references": "id",
+      "on": "proyectos",
+      "onDelete": "cascade",
+      "onUpdate": "cascade"
+    },
     {
       "column": "id_coordinador",
       "references": "id",

@@ -2,10 +2,9 @@
 
 @section('contenido')
     <div class="container">
-        <div class="row">
 
 
-        <div class="col-md-9">
+    <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">Grupo</div>
                     <div class="card-body">
@@ -30,14 +29,14 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Nombre</th><th>Detalle</th><th>Id Coordinador</th><th>Actions</th>
+                                        <th>#</th><th>Nombre</th><th>Detalle</th><th>Id Proyecto</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($grupo as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->nombre }}</td><td>{{ $item->detalle }}</td><td>{{ $item->id_coordinador }}</td>
+                                        <td>{{ $item->nombre }}</td><td>{{ $item->detalle }}</td><td>{{ $item->id_proyecto }}</td>
                                         <td>
                                             <a href="{{ url('/grupo/' . $item->id) }}" title="View Grupo"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/grupo/' . $item->id . '/edit') }}" title="Edit Grupo"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
@@ -45,7 +44,7 @@
                                             <form method="POST" action="{{ url('/grupo' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Grupo" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Grupo" onclick="return confirm('Confirm delete?')"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                                             </form>
                                         </td>
                                     </tr>

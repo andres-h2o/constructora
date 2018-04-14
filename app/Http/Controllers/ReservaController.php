@@ -2,14 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Me;
+use App\Puesto;
 use App\Reserva;
+use App\TipoReserva;
+use App\Vendedor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ReservaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -44,7 +55,8 @@ class ReservaController extends Controller
      */
     public function create()
     {
-        return view('reserva.create');
+        $tiposReserva = TipoReserva::all()->pluck('nombre', 'id');
+        return view('reserva.create', compact('tiposReserva'));
     }
 
     /**
@@ -57,17 +69,13 @@ class ReservaController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'fecha' => 'required',
-			'monto' => 'required',
-			'fecha_fin' => 'required',
-			'dias' => 'required',
-			'id_puesto' => 'required',
-			'id_mes' => 'required',
-			'id_tipoReserva' => 'required',
-			'id_vendedor' => 'required'
-		]);
+            'fecha' => 'required',
+            'monto' => 'required',
+            'id_tipoReserva' => 'required',
+            'id_vendedor' => 'required'
+        ]);
         $requestData = $request->all();
-        
+
         Reserva::create($requestData);
 
         return redirect('reserva')->with('flash_message', 'Reserva added!');
@@ -76,7 +84,7 @@ class ReservaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      *
      * @return \Illuminate\View\View
      */
@@ -90,7 +98,7 @@ class ReservaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      *
      * @return \Illuminate\View\View
      */
@@ -105,24 +113,24 @@ class ReservaController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param  int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-			'fecha' => 'required',
-			'monto' => 'required',
-			'fecha_fin' => 'required',
-			'dias' => 'required',
-			'id_puesto' => 'required',
-			'id_mes' => 'required',
-			'id_tipoReserva' => 'required',
-			'id_vendedor' => 'required'
-		]);
+            'fecha' => 'required',
+            'monto' => 'required',
+            'fecha_fin' => 'required',
+            'dias' => 'required',
+            'id_puesto' => 'required',
+            'id_mes' => 'required',
+            'id_tipoReserva' => 'required',
+            'id_vendedor' => 'required'
+        ]);
         $requestData = $request->all();
-        
+
         $reserva = Reserva::findOrFail($id);
         $reserva->update($requestData);
 
@@ -132,7 +140,7 @@ class ReservaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -141,5 +149,88 @@ class ReservaController extends Controller
         Reserva::destroy($id);
 
         return redirect('reserva')->with('flash_message', 'Reserva deleted!');
+    }
+
+    public function nuevaReserva($id_puesto, $id_proyecto)
+    {
+        $puesto = Puesto::find($id_puesto);
+
+        if ($puesto->estado == "libre") {
+            $vendedores = Vendedor::_getVendedoresProyecto($id_proyecto)->get()->pluck('nombre', 'id');
+            $tiposReserva = TipoReserva::all()->pluck('nombre', 'id');
+            return view('reserva.create', compact('tiposReserva', 'vendedores', 'id_puesto', 'id_proyecto'));
+        } else {
+            Session::flash('error', 'Puesto  está ' . $puesto->estado . '!!');
+            return back();
+        }
+    }
+
+    public function guardarReserva(Request $request, $id_puesto, $id_proyecto)
+    {
+        $puesto = Puesto::find($id_puesto);
+
+        if ($puesto->estado == "libre") {
+            $this->validate($request, [
+                'fecha' => 'required',
+                'monto' => 'required',
+                'nombre' => 'required',
+                'id_tipoReserva' => 'required',
+                'id_vendedor' => 'required'
+            ]);
+            $id_mes = Me::where('estado', '=', 1)->select('id')->orderBy('id', 'desc')->first()->id;
+            $dias = TipoReserva::find($request['id_tipoReserva'])->dias_reales;
+
+            Cliente::created([
+                'nombre' => $request['nombre'],
+                'id_vendedor' => $request['id_vendedor']
+            ]);
+            $id_cliente = Cliente::select('id')->orderBy('id', 'desc')->get()->first()->id;
+
+            Reserva::create([
+                'fecha' => $request['fecha'],
+                'monto' => $request['monto'],
+                'fecha_fin' => $request['fecha'],
+                'dias' => $dias,
+                'estado' => 1,
+                'id_puesto' => $id_puesto,
+                'id_vendedor' => $request['id_vendedor'],
+                'id_cliente' => $id_cliente,
+                'id_tipoReserva' => $request['id_tipoReserva'],
+                'id_mes' => $id_mes,
+
+            ]);
+            Puesto::find($id_puesto)->update([
+                'estado' => "reservado"
+            ]);
+            $puesto = Puesto::find($id_puesto);
+            Session::flash('message', 'Reserva guardada!');
+            return redirect('/puesto/listar/'.$puesto->id_bloque);
+        } else {
+            Session::flash('error', 'Puesto Ya está reservado!');
+            return back();
+        }
+
+
+    }
+
+    public function actualizarReserva(Request $request, $id_reserva)
+    {
+        $this->validate($request, [
+            'dias' => 'required',
+            'estado' => 'required'
+        ]);
+        Reserva::find($id_reserva)->update([
+            'dias'=>$request['dias'],
+            'estado'=>$request['estado']
+        ]);
+        $reserva=Reserva::find($id_reserva);
+        if($request['estado']==0){
+            Puesto::find($reserva->id_puesto)->update([
+                'estado'=>"libre"
+            ]);
+        }
+        $puesto =Puesto::find($reserva->id_puesto);
+        Session::flash('message', 'Reserva Actualizada correctamente!');
+        return redirect('/puesto/listar/'.$puesto->id_bloque);
     }
 }

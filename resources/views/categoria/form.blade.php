@@ -7,7 +7,7 @@
 </div><div class="form-group {{ $errors->has('color') ? 'has-error' : ''}}">
     <label for="color" class="col-md-4 control-label">{{ 'Color' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="color" type="text" id="color" value="{{ $categorium->color or ''}}" required>
+        <input class="form-control" name="color" type="color" id="color" value="{{ $categorium->color or ''}}" required>
         {!! $errors->first('color', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('precio') ? 'has-error' : ''}}">

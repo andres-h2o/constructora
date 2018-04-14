@@ -27,5 +27,15 @@ class Bloque extends Model
      */
     protected $fillable = ['numero', 'id_modulo'];
 
-    
+    public function scope_getBloquesModulo($query, $id_modulo)
+    {
+        $bloques = $query->join('modulos as m','m.id','id_modulo')
+            ->where('id_modulo',$id_modulo)
+            ->select(
+                'm.nro as modulo',
+                'bloques.id as id_bloque',
+                'bloques.numero as bloque'
+            )->orderBy('bloques.numero','asc');
+        return $bloques;
+    }
 }

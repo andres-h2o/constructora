@@ -37,14 +37,15 @@
                                         <td>{{ $loop->iteration or $item->id }}</td>
                                         <td>{{ $item->nombre }}</td><td>{{ $item->zona }}</td><td>{{ $item->fecha }}</td>
                                         <td>
-                                            <a href="{{ url('/proyecto/' . $item->id) }}" title="View Proyecto"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
-                                            <a href="{{ url('/proyecto/' . $item->id . '/edit') }}" title="Edit Proyecto"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                                            <a href="{{ url('/proyecto/' . $item->id) }}" title="View Proyecto"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
+                                            <a href="{{ url('/proyecto/' . $item->id . '/edit') }}" title="Edit Proyecto"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
+                                            <a href="{{ url('/bloque/listar/' . $item->id  ) }}" title="Bloques"><button class="btn btn-blue btn-sm"><i class="fa fa-table" aria-hidden="true"></i> Bloques</button></a>
 
-                                            <form method="POST" action="{{ url('/proyecto' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
+                                            {{--<form method="POST" action="{{ url('/proyecto' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Proyecto" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                                            </form>
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Proyecto" onclick="return confirm('Seguro que desea Borrar Proyecto?')"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                            </form>--}}
                                         </td>
                                     </tr>
                                 @endforeach
