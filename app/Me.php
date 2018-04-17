@@ -25,7 +25,7 @@ class Me extends Model
      *
      * @var array
      */
-    protected $fillable = ['ventas_contado', 'monto_ventas_contado', 'ventas_credito', 'monto_ventas_credito', 'nro_reservas', 'fecha_inicio', 'fecha_cierre', 'estado'];
+    protected $fillable = ['ventas_contado', 'monto_ventas_contado', 'ventas_credito', 'monto_ventas_credito', 'nro_reservas', 'fecha_inicio', 'fecha_cierre', 'estado','meta','id_proyecto'];
 
     
 }

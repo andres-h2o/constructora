@@ -184,12 +184,12 @@ class PuestoController extends Controller
 
     public function bloqueadoVer($id_puesto)
     {
+        $puesto=Puesto::_getPuesto($id_puesto);
         $bloqueo= Bloqueo::where('id_puesto','=',$id_puesto)
-            ->select('id','id_cliente','id_vendedor')
+            ->select('id','id_vendedor','created_at')
             ->orderBy('id','desc')->get()->first();
-        $cliente = Cliente::find($bloqueo->id_cliente);
         $vendedor = Vendedor::find($bloqueo->id_vendedor);
-        return compact('bloqueo','cliente','vendedor');
+        return view('bloqueo.ver',compact('bloqueo','vendedor','puesto'));
     }
 
     public function libreVer($id_puesto)

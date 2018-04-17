@@ -25,7 +25,7 @@ class Vendedor extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre', 'telefono', 'direccion', 'estado', 'codigo', 'ci', 'id_grupo'];
+    protected $fillable = ['nombre', 'telefono', 'direccion','imagen', 'estado', 'codigo', 'ci', 'id_grupo'];
 
     public function scope_getVendedoresProyecto($query,$id_proyecto)
     {

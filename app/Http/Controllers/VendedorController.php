@@ -143,4 +143,6 @@ class VendedorController extends Controller
 
         return redirect('vendedor')->with('flash_message', 'Vendedor deleted!');
     }
+
+
 }

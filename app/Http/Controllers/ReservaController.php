@@ -177,7 +177,13 @@ class ReservaController extends Controller
                 'id_tipoReserva' => 'required',
                 'id_vendedor' => 'required'
             ]);
-            $id_mes = Me::where('estado', '=', 1)->select('id')->orderBy('id', 'desc')->first()->id;
+            $id_proyecto = Puesto::join('bloques as b','b.id','=','puestos.id_bloque')
+                ->join('modulos as m','m.id','=','b.id_modulo')
+                ->where('puestos.id','=',$id_puesto)->select('m.id_proyecto as id_proyecto')->get()->first()->id_proyecto;
+            $id_mes = Me::where('estado', '=', 1)
+                ->where('id_proyecto','=',$id_proyecto)
+                ->select('id')->orderBy('id', 'desc')->get()->first()->id;
+
             $dias = TipoReserva::find($request['id_tipoReserva'])->dias_reales;
 
             Cliente::created([

@@ -1,58 +1,67 @@
 @extends('layouts.admin')
 
 @section('contenido')
+
+    @include('alerts.request')
+    @include('alerts.success')
+    @include('alerts.existfail')
     <div class="container">
         <div class="row">
 
 
-        <div class="col-md-9">
+            <div class="col-md-9">
                 <div class="card">
-                    <div class="card-header">Mes</div>
+                    <div class="card-header">Meses</div>
                     <div class="card-body">
-                        <a href="{{ url('/mes/create') }}" class="btn btn-success btn-sm" title="Add New Me">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add New
-                        </a>
 
-                        <form method="GET" action="{{ url('/mes') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
-                                <span class="input-group-append">
-                                    <button class="btn btn-secondary" type="submit">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
-                        </form>
-
-                        <br/>
-                        <br/>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
-                                    <tr>
-                                        <th>#</th><th>Ventas Contado</th><th>Monto Ventas Contado</th><th>Ventas Credito</th><th>Actions</th>
-                                    </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mes</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Cierre</th>
+                                    <th>Acciones</th>
+                                </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($mes as $item)
-                                    <tr>
-                                        <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->ventas_contado }}</td><td>{{ $item->monto_ventas_contado }}</td><td>{{ $item->ventas_credito }}</td>
-                                        <td>
-                                            <a href="{{ url('/mes/' . $item->id) }}" title="View Me"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
-                                            <a href="{{ url('/mes/' . $item->id . '/edit') }}" title="Edit Me"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                                    @if($item->estado==1)
+                                        <tr style="color: darkgreen ">
+                                    @else
+                                        <tr>
+                                    @endif
+                                            <td>{{ $loop->iteration or $item->id }}</td>
+                                            <td style="text-transform: uppercase">{{ \Jenssegers\Date\Date:: parse($item->fecha_inicio)->format('F Y') }}</td>
+                                            <td>{{ \Jenssegers\Date\Date:: parse($item->fecha_inicio)->format('j F Y')  }}</td>
 
-                                            <form method="POST" action="{{ url('/mes' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
-                                                {{ method_field('DELETE') }}
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Me" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                            <td>
+                                                @if($item->estado==0)
+                                                    {{ \Jenssegers\Date\Date:: parse($item->fecha_cierre)->format('j F Y') }}
+                                                @else
+                                                    En Curso
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{ url('/mes/imprimir/' . $item->id) }}" title="View Me">
+                                                    <button class="btn btn-info btn-sm">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i> Ver e Imprimir
+                                                    </button>
+                                                </a>
+                                                @if($item->estado==1)
+                                                    <a href="{{ url('/mes/nuevo/' . $item->id) }}" title="Edit Me">
+                                                        <button class="btn btn-primary btn-sm">
+                                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>Cerrar
+                                                        </button>
+                                                    </a>
+                                                @endif
+
+                                            </td>
+                                        </tr>
+                                        @endforeach
                                 </tbody>
                             </table>
-                            <div class="pagination-wrapper"> {!! $mes->appends(['search' => Request::get('search')])->render() !!} </div>
                         </div>
 
                     </div>

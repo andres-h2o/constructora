@@ -159,7 +159,12 @@ class BloqueoController extends Controller
             $this->validate($request, [
                 'id_vendedor' => 'required'
             ]);
-            $id_mes = Me::where('estado', '=', 1)->select('id')->orderBy('id', 'desc')->first()->id;
+            $id_proyecto = Puesto::join('bloques as b','b.id','=','puestos.id_bloque')
+                ->join('modulos as m','m.id','=','b.id_modulo')
+                ->where('puestos.id','=',$id_puesto)->select('m.id_proyecto as id_proyecto')->get()->first()->id_proyecto;
+            $id_mes = Me::where('estado', '=', 1)
+                ->where('id_proyecto','=',$id_proyecto)
+                ->select('id')->orderBy('id', 'desc')->first()->id;
 
 
             Bloqueo::create([
@@ -179,5 +184,25 @@ class BloqueoController extends Controller
         }
 
 
+    }
+    public function actualizarBloqueo(Request $request, $id_reserva)
+    {
+        $this->validate($request, [
+            'dias' => 'required',
+            'estado' => 'required'
+        ]);
+        Reserva::find($id_reserva)->update([
+            'dias'=>$request['dias'],
+            'estado'=>$request['estado']
+        ]);
+        $reserva=Reserva::find($id_reserva);
+        if($request['estado']==0){
+            Puesto::find($reserva->id_puesto)->update([
+                'estado'=>"libre"
+            ]);
+        }
+        $puesto =Puesto::find($reserva->id_puesto);
+        Session::flash('message', 'Reserva Actualizada correctamente!');
+        return redirect('/puesto/listar/'.$puesto->id_bloque);
     }
 }

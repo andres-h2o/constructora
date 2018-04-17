@@ -31,6 +31,12 @@ Route::post('reserva/guardar/{id_puesto}/{id_proyecto}', 'ReservaController@guar
 Route::get('bloqueo/nuevo/{id_puesto}/{id_proyecto}', 'BloqueoController@nuevoBloqueo');
 Route::post('bloqueo/guardar/{id_puesto}', 'BloqueoController@guardarBloqueo');
 Route::post('reserva/actualizar/{id_reserva}', 'ReservaController@actualizarReserva')->name('reserva.actualizar');
+Route::post('bloqueo/actualizar/{id_bloqueo}', 'BloqueoController@actualizarBloqueo');
+Route::get('mes/ver/{id_proyecto}', 'MesController@verMeses');
+Route::get('mes/nuevo/{id_mes}', 'MesController@nuevo');
+Route::post('mes/guardar/{id_mes}', 'MesController@guardar');
+Route::get('mes/imprimir/{id_mes}', 'MesController@informeGeneral');
+Route::get('mes/top/{id_mes}', 'MesController@irTop');
 Route::post('json-clientes', 'ClienteController@clientesVendedor');
 
 
@@ -58,3 +64,18 @@ Route::resource('mes', 'MesController');
 Route::resource('bloqueo', 'BloqueoController');
 Route::resource('grupo', 'GrupoController');
 Route::resource('cliente', 'ClienteController');
+
+//WEB SERVICES
+Route::get('vendedor/validar/{id}/{ci}', 'WebServicesController@validarVendedor')->name('vendedor.validar');
+Route::get('vendedor/estado/{id}', 'WebServicesController@estadoVendedor');
+Route::get('venta/previo/{id_puesto}', 'WebServicesController@datosVenderPuesto')->name('venta.previo');
+Route::get('modulos/{id_proyecto}', 'WebServicesController@modulos');
+Route::get('bloques/{id_modulo}', 'WebServicesController@bloques');
+Route::get('puestos/{id_bloque}', 'WebServicesController@puestos');
+Route::get('vender/{id_vendedor}/{id_cliente}/{id_puesto}/{monto}/{id_tipoVenta}', 'WebServicesController@vender');
+Route::get('reservasVer/{id_vendedor}', 'WebServicesController@reservas');
+Route::get('ventasVer/{id_vendedor}', 'WebServicesController@ventas');
+Route::get('cliente/guardar/{nombre}/{telefono}/{direccion}/{id_vendedor}', 'WebServicesController@guardarCliente');
+Route::get('cliente/listar/{id_vendedor}', 'WebServicesController@listarClientes');
+Route::get('cliente/listardos/{id_vendedor}', 'WebServicesController@listarClientes2');
+Route::get('vendedor/imagen/{id_vendedor}', 'WebServicesController@guardarImagen');
