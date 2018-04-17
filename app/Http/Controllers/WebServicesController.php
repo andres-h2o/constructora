@@ -202,6 +202,12 @@ class WebServicesController extends Controller
     public function guardarImagen($id_vendedor)
     {
 
+        $lista=array();
+        array_push($lista,array("andres"=>1));
+        array_push($lista,array("andres"=>1));
+        array_push($lista,array("andres"=>1));
+        array_push($lista,array("andres"=>1));
+        return $lista;
 
         $imagen=Input::get('imagen');
         Vendedor::find($id_vendedor)->update([

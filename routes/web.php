@@ -36,6 +36,8 @@ Route::get('mes/ver/{id_proyecto}', 'MesController@verMeses');
 Route::get('mes/nuevo/{id_mes}', 'MesController@nuevo');
 Route::post('mes/guardar/{id_mes}', 'MesController@guardar');
 Route::get('mes/imprimir/{id_mes}', 'MesController@informeGeneral');
+Route::get('mes/top-proyectos', 'MesController@topProyectos');
+Route::get('mes/ver-top/{id_proyecto}', 'MesController@verMesesTop');
 Route::get('mes/top/{id_mes}', 'MesController@irTop');
 Route::post('json-clientes', 'ClienteController@clientesVendedor');
 

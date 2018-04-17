@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
 use App\Grupo;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Me;
 use App\Proyecto;
+use App\Reserva;
 use App\Vendedor;
 use App\Ventum;
 use Barryvdh\DomPDF\PDF;
+use FontLib\TrueType\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -60,6 +63,13 @@ class MesController extends Controller
         }
 
         return view('mes.proyectos', compact('proyecto'));
+    }
+
+    public function topProyectos()
+    {
+        $perPage = 25;
+        $proyecto = Proyecto::latest()->paginate($perPage);
+        return view('mes.proyecto-top', compact('proyecto'));
     }
 
     /**
@@ -178,6 +188,16 @@ class MesController extends Controller
         )->orderBy('id', 'desc')->get();
         return view('mes.index', compact('mes'));
     }
+public function verMesesTop($id_proyecto)
+    {
+        $mes = Me::where('id_proyecto', '=', $id_proyecto)->select(
+            'id',
+            'fecha_inicio',
+            'fecha_cierre',
+            'estado'
+        )->orderBy('id', 'desc')->get();
+        return view('mes.mes-top', compact('mes'));
+    }
 
     public function informeGeneral($id_mes)
     {
@@ -289,25 +309,49 @@ from vendedors as v,ventas as ven
 
     }
 
-    public function irTop($id_proyecto)
+    public function irTop($id_mes)
     {
-        $mes = Me::where('id_proyecto', '=', $id_proyecto);
-        $grupo = Grupo::where('id_proyecto', '=', $id_proyecto)->get()->first();
-        return $grupo;
-        $trabajadores = Vendedor::where('id_grupo', '=', $grupo->id)->get();
+        $mes = Me::find($id_mes);
+        $grupo = Grupo::where('id_proyecto', '=', $mes->id_proyecto)->get()->first();
+
+        $trabajadores = Vendedor::join('Ventas as v','v.id_vendedor','=','vendedors.id')
+            ->where('id_grupo', '=', $grupo->id)->select(
+                'vendedors.id as id',
+                'vendedors.nombre as nombre',
+                DB::raw('count(*) as nro')
+            )->groupBy('vendedors.id','vendedors.nombre')->orderBy('nro','desc')->get();
+
 
         $lista = array();
         foreach ($trabajadores as $item) {
-            $ventasContado = Ventum::where('id_mes', '=', $mes->id)
+            $ventasContado = Ventum::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('id_tipo_venta', '=', 1)
-                ->select('id_trabajador', 'sum(1)')
-                ->groupBy('id_trabajador')->get();
-            return $ventasContado;
-            $ventasCredito = 1;
-            $reservas = 1;
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasContado = ($ventasContado != "") ? $ventasContado->nro : 0;
+            $ventasCredito = Ventum::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 2)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasCredito = ($ventasCredito != "") ? $ventasCredito->nro : 0;
+            $reservas = Reserva::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $reservas = ($reservas != "") ? $reservas->nro : 0;
+            array_push($lista,array(
+                "nombre" => $item->nombre,
+                "contado" => $ventasContado,
+                "credito" => $ventasCredito,
+                "reserva" => $reservas,
+                "puntos" => $ventasCredito + $ventasContado,
+                "falta"=>50-($ventasCredito + $ventasContado),
+                "meta"=>50
+            ));
         }
-        return view('mes.top');
+        return view('mes.top',compact('lista','trabajadores'));
 
     }
 }
