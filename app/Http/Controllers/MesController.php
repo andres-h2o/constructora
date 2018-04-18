@@ -314,7 +314,7 @@ from vendedors as v,ventas as ven
         $mes = Me::find($id_mes);
         $grupo = Grupo::where('id_proyecto', '=', $mes->id_proyecto)->get()->first();
 
-        $trabajadores = Vendedor::join('Ventas as v','v.id_vendedor','=','vendedors.id')
+        $trabajadores = Vendedor::join('ventas as v','v.id_vendedor','=','vendedors.id')
             ->where('id_grupo', '=', $grupo->id)->select(
                 'vendedors.id as id',
                 'vendedors.nombre as nombre',

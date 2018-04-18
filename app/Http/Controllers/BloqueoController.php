@@ -159,25 +159,35 @@ class BloqueoController extends Controller
             $this->validate($request, [
                 'id_vendedor' => 'required'
             ]);
-            $id_proyecto = Puesto::join('bloques as b','b.id','=','puestos.id_bloque')
-                ->join('modulos as m','m.id','=','b.id_modulo')
-                ->where('puestos.id','=',$id_puesto)->select('m.id_proyecto as id_proyecto')->get()->first()->id_proyecto;
-            $id_mes = Me::where('estado', '=', 1)
-                ->where('id_proyecto','=',$id_proyecto)
-                ->select('id')->orderBy('id', 'desc')->first()->id;
+            $nro=Bloqueo::where('estado','=',1)
+                ->where('id_vendedor','=',$request['id_vendedor'])
+                ->get()->count();
+           if ($nro<1){
 
 
-            Bloqueo::create([
-                'estado' => 1,
-                'id_puesto' => $id_puesto,
-                'id_vendedor' => $request['id_vendedor'],
-                'id_mes' => $id_mes,
-            ]);
-            Puesto::find($id_puesto)->update([
-                'estado' => "bloqueado"
-            ]);
-            Session::flash('message', 'Bloqueo Guardado!');
-            return redirect('/puesto/listar/'.$puesto->id_bloque);
+               $id_proyecto = Puesto::join('bloques as b','b.id','=','puestos.id_bloque')
+                   ->join('modulos as m','m.id','=','b.id_modulo')
+                   ->where('puestos.id','=',$id_puesto)->select('m.id_proyecto as id_proyecto')->get()->first()->id_proyecto;
+               $id_mes = Me::where('estado', '=', 1)
+                   ->where('id_proyecto','=',$id_proyecto)
+                   ->select('id')->orderBy('id', 'desc')->first()->id;
+
+
+               Bloqueo::create([
+                   'estado' => 1,
+                   'id_puesto' => $id_puesto,
+                   'id_vendedor' => $request['id_vendedor'],
+                   'id_mes' => $id_mes,
+               ]);
+               Puesto::find($id_puesto)->update([
+                   'estado' => "bloqueado"
+               ]);
+               Session::flash('message', 'Bloqueo Guardado!');
+               return redirect('/puesto/listar/'.$puesto->id_bloque);
+           }else{
+               Session::flash('error', 'Ejecutivo de ventas Ya alcanzo el limite de bloqueos!');
+               return redirect('/puesto/listar/'.$puesto->id_bloque);
+           }
         } else {
             Session::flash('error', 'Puesto  está ' . $puesto->estado . '!!');
             return back();
@@ -188,21 +198,20 @@ class BloqueoController extends Controller
     public function actualizarBloqueo(Request $request, $id_reserva)
     {
         $this->validate($request, [
-            'dias' => 'required',
             'estado' => 'required'
         ]);
-        Reserva::find($id_reserva)->update([
+        Bloqueo::find($id_reserva)->update([
             'dias'=>$request['dias'],
             'estado'=>$request['estado']
         ]);
-        $reserva=Reserva::find($id_reserva);
+        $reserva=Bloqueo::find($id_reserva);
         if($request['estado']==0){
             Puesto::find($reserva->id_puesto)->update([
                 'estado'=>"libre"
             ]);
         }
         $puesto =Puesto::find($reserva->id_puesto);
-        Session::flash('message', 'Reserva Actualizada correctamente!');
+        Session::flash('message', 'Bloqueo Actualizado correctamente!');
         return redirect('/puesto/listar/'.$puesto->id_bloque);
     }
 }

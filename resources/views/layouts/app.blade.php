@@ -8,18 +8,16 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>MultiBanco</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-
 </head>
-<body background="img/images.jfif">
+<body>
     <div id="app">
-        <nav class="navbar navbar-default navbar-static-top" style="background-color: #404e67;color: white">
-            <div class="container" >
-                <div class="navbar-header" style="color: white">
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
 
                     <!-- Collapsed Hamburger -->
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
@@ -30,12 +28,12 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}" style="color: white">
-                        MultiBanco
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        {{ config('app.name', 'Laravel') }}
                     </a>
                 </div>
 
-                <div class="collapse navbar-collapse" id="app-navbar-collapse" >
+                <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         &nbsp;
@@ -45,8 +43,8 @@
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
                         @if (Auth::guest())
-                            <li><a href="{{ route('login') }}" style="color: white">Login</a></li>
-                            <li><a href="{{ route('register') }}" style="color: white">Registrarse</a></li>
+                            <li><a href="{{ route('login') }}">Login</a></li>
+                            {{--<li><a href="{{ route('register') }}">Register</a></li>--}}
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
