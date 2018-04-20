@@ -15,8 +15,12 @@
 
         <div class="col-md-9">
             <div class="card">
-                <div class="card-header"><h1>Puestos <strong>{{ $puestos->first()->proyecto }}</strong></h1>
-                    <h2>Módulo :{{ $puestos->first()->modulo }}<br>Bloque :{{ $puestos->first()->bloque }}</h2></div>
+                <br>
+                <a class="button" style="font-size: 10px;" title="Ir atras" href="{{ URL::previous() }}">
+                    <span class="dashicons dashicons-admin-generic"></span><i class="fa fa-mail-reply"></i> Volver Atras
+                </a>
+                <div class="card-header"><h1>Puestos <strong>{{ $puesto->first()->proyecto }}</strong></h1>
+                    <h2>Módulo :{{ $puesto->first()->modulo }}<br>Bloque :{{ $puesto->first()->bloque }}</h2></div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table">
@@ -32,7 +36,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($puestos as $item)
+                            @foreach($puesto as $item)
                                 <tr>
                                     <td style="text-align:center"><br>
                                         <h1><strong>{{ $item->numero }}</strong></h1></td>

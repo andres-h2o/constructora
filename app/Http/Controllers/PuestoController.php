@@ -7,9 +7,11 @@ use App\Cliente;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Proyecto;
 use App\Puesto;
 use App\Reserva;
 use App\TipoReserva;
+use App\TipoVentum;
 use App\Vendedor;
 use App\Ventum;
 use Carbon\Carbon;
@@ -160,41 +162,115 @@ class PuestoController extends Controller
 
     public function reservadoVer($id_puesto)
     {
-        $reserva = Reserva::where('id_puesto','=',$id_puesto)
-            ->select('id','id_cliente','id_vendedor')
-        ->orderBy('id','desc')->get()->first();
+        $reserva = Reserva::where('id_puesto', '=', $id_puesto)
+            ->select('id', 'id_cliente', 'id_vendedor')
+            ->orderBy('id', 'desc')->get()->first();
         $reserva = Reserva::find($reserva->id);
-        $puesto=Puesto::_getPuesto($id_puesto);
+        $puesto = Puesto::_getPuesto($id_puesto);
         $restantes = $reserva->dias - Carbon::createFromFormat('Y-m-d', $reserva->fecha)->diffInDays();
-        $tipo_reserva=TipoReserva::find($reserva->id_tipoReserva);
+        $tipo_reserva = TipoReserva::find($reserva->id_tipoReserva);
         $cliente = Cliente::find($reserva->id_cliente);
         $vendedor = Vendedor::find($reserva->id_vendedor);
-        return view('reserva.ver',compact('reserva','puesto','cliente','vendedor','tipo_reserva','restantes'));
+        return view('reserva.ver', compact('reserva', 'puesto', 'cliente', 'vendedor', 'tipo_reserva', 'restantes'));
     }
 
     public function vendidoVer($id_puesto)
     {
-        $venta = Ventum::where('id_puesto','=',$id_puesto)
-            ->select('id','id_cliente','id_vendedor')
-            ->orderBy('id','desc')->get()->first();
+        $venta = Ventum::where('id_puesto', '=', $id_puesto)
+            ->select('id', 'id_cliente', 'id_vendedor')
+            ->orderBy('id', 'desc')->get()->first();
+        $venta = Ventum::find($venta->id);
+        $puesto = Puesto::_getPuesto($id_puesto);
+        $tipoVenta =TipoVentum::find($venta->id_tipo_venta);
         $cliente = Cliente::find($venta->id_cliente);
         $vendedor = Vendedor::find($venta->id_vendedor);
-        return compact('venta','cliente','vendedor');
+        return view('venta.ver', compact('venta', 'cliente', 'vendedor','puesto','tipoVenta'));
     }
 
     public function bloqueadoVer($id_puesto)
     {
-        $puesto=Puesto::_getPuesto($id_puesto);
-        $bloqueo= Bloqueo::where('id_puesto','=',$id_puesto)
-            ->select('id','id_vendedor','created_at')
-            ->orderBy('id','desc')->get()->first();
+        $puesto = Puesto::_getPuesto($id_puesto);
+        $bloqueo = Bloqueo::where('id_puesto', '=', $id_puesto)
+            ->select('id', 'id_vendedor', 'created_at')
+            ->orderBy('id', 'desc')->get()->first();
         $vendedor = Vendedor::find($bloqueo->id_vendedor);
-        return view('bloqueo.ver',compact('bloqueo','vendedor','puesto'));
+        return view('bloqueo.ver', compact('bloqueo', 'vendedor', 'puesto'));
     }
 
     public function libreVer($id_puesto)
     {
         Session::flash('message', 'Puesto está Libre!!');
         return back();
+    }
+
+    public function vistaBuscar()
+    {
+        $proyectos = Proyecto::all()->pluck('nombre', 'id');
+        return view('puesto.buscar', compact('proyectos'));
+    }
+
+    public function encontrar(Request $request)
+    {
+        $id_proyecto = $request->get('id_proyecto');
+        $bloque = $request->get('bloque');
+        $puesto = $request->get('puesto');
+        if($puesto== ''){
+            $puesto = Puesto::join('categorias as c', 'c.id', '=', 'puestos.id_categoria')
+                ->join('bloques as b', 'b.id', '=', 'puestos.id_bloque')
+                ->join('modulos as m', 'm.id', '=', 'b.id_modulo')
+                ->join('proyectos as p', 'p.id', '=', 'm.id_proyecto')
+                ->where('p.id', '=', $id_proyecto)
+                ->where('b.numero', '=', $bloque)
+                ->select(
+                    'puestos.id',
+                    'puestos.nro as numero',
+                    'largo',
+                    'ancho',
+                    'puestos.estado',
+                    'p.nombre as proyecto',
+                    'p.id as id_proyecto',
+                    'm.nro as modulo',
+                    'b.numero as bloque',
+                    'c.nombre as categoria',
+                    'c.color as color',
+                    'c.precio as precio',
+                    'c.cuota_inicial as cuota_inicial',
+                    'c.cuota_mensual',
+                    'c.plazo_meses'
+                )->orderBy('puestos.id', 'asc')->get();
+        }else{
+            $puesto = Puesto::join('categorias as c', 'c.id', '=', 'puestos.id_categoria')
+                ->join('bloques as b', 'b.id', '=', 'puestos.id_bloque')
+                ->join('modulos as m', 'm.id', '=', 'b.id_modulo')
+                ->join('proyectos as p', 'p.id', '=', 'm.id_proyecto')
+                ->where('p.id', '=', $id_proyecto)
+                ->where('b.numero', '=', $bloque)
+                ->where('puestos.nro', '=', $puesto)
+                ->select(
+                    'puestos.id',
+                    'puestos.nro as numero',
+                    'largo',
+                    'ancho',
+                    'puestos.estado',
+                    'p.nombre as proyecto',
+                    'p.id as id_proyecto',
+                    'm.nro as modulo',
+                    'b.numero as bloque',
+                    'c.nombre as categoria',
+                    'c.color as color',
+                    'c.precio as precio',
+                    'c.cuota_inicial as cuota_inicial',
+                    'c.cuota_mensual',
+                    'c.plazo_meses'
+                )->orderBy('puestos.id', 'asc')->get();
+        }
+
+        if ($puesto->first() != "") {
+
+            return view('puesto.ver', compact('puesto'));
+        }else{
+            Session::flash('error', 'No existe este puesto!!');
+            return back();
+        }
     }
 }

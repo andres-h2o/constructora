@@ -16,11 +16,17 @@
         <input class="form-control" name="direccion" type="text" id="direccion" value="{{ $cliente->direccion or ''}}" required>
         {!! $errors->first('direccion', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('estado') ? 'has-error' : ''}}">
-    <label for="estado" class="col-md-4 control-label">{{ 'Estado' }}</label>
+</div><div class="form-group {{ $errors->has('ci') ? 'has-error' : ''}}">
+    <label for="ci" class="col-md-4 control-label">{{ 'CI' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="estado" type="number" id="estado" value="{{ $cliente->estado or ''}}" required>
-        {!! $errors->first('estado', '<p class="help-block">:message</p>') !!}
+        <input class="form-control" name="ci" type="text" id="ci" value="{{ $cliente->ci or ''}}" required>
+        {!! $errors->first('ci', '<p class="help-block">:message</p>') !!}
+    </div>
+</div><div class="form-group {{ $errors->has('id_vendedor') ? 'has-error' : ''}}">
+    <label for="id_vendedor" class="col-md-4 control-label">{{ 'Vendedor' }}</label>
+    <div class="col-md-6">
+        {!! Form::select('id_vendedor', $vendedores, null, ['class' => 'form-control']) !!}
+        {!! $errors->first('id_vendedor', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
 

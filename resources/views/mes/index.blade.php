@@ -11,7 +11,11 @@
 
             <div class="col-md-9">
                 <div class="card">
-                    <div class="card-header">Meses</div>
+                    <br>
+                    <a class="button" style="font-size: 10px;" title="Ir atras" href="{{ URL::previous() }}">
+                        <span class="dashicons dashicons-admin-generic"></span><i class="fa fa-mail-reply"></i> Volver Atras
+                    </a>
+                    <div class="card-header"><h3> Meses</h3></div>
                     <div class="card-body">
 
                         <div class="table-responsive">
@@ -51,7 +55,7 @@
                                                 </a>
                                                 @if($item->estado==1)
                                                     <a href="{{ url('/mes/nuevo/' . $item->id) }}" title="Edit Me">
-                                                        <button class="btn btn-primary btn-sm">
+                                                        <button class="btn btn-primary btn-sm" onclick="return confirm('Seguro que desea Cerrar Mes?')">
                                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>Cerrar
                                                         </button>
                                                     </a>

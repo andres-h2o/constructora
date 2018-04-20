@@ -8,7 +8,7 @@
 
         <div class="col-md-9">
                 <div class="card">
-                    <div class="card-header">Create New Cliente</div>
+                    <div class="card-header"><h3> Crear Nuevo Cliente</h3></div>
                     <div class="card-body">
                         <a href="{{ url('/cliente') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
                         <br />

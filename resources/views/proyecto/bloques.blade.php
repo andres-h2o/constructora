@@ -6,7 +6,19 @@
     <div class="panel panel-primary">
         <div class="panel-body">
             <h1 id="cabeza">Lista de Bloques por Módulos <br>del Proyecto: {{$proyecto->nombre}}</h1>
+            <form method="GET" action="{{ url('/cliente') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
+                <div class="input-group">
+                    Bloque:
+                    <input type="number"  name="bloque" placeholder="Bloque..." value="{{ request('search') }}">Puesto:<input type="number"  name="puesto" placeholder="Puesto..." value="{{ request('search') }}">
+                    <span class="input-group-append">
+                                    <button class="btn btn-secondary" type="submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                </div>
+            </form>
             <br>
+
             <div  id="accordion" >
                 @foreach($bloques as $bloque)
                 <div class="panel panel-default">

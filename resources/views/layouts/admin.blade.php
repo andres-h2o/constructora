@@ -57,6 +57,24 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+<style type="text/css">
+    .button {
+        background-color: #13AFDF;
+        border-radius: 6px;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 16px 24px;
+        text-align: center;
+        text-transform: uppercase;
+        width: auto;
+    }
+    .button:hover {
+        background-color: #FB7E29;
+        color: #fff;
+    }
+</style>
 <body data-open="click" data-menu="vertical-menu-modern" data-col="2-columns"
       class="vertical-layout vertical-menu-modern 2-columns   menu-expanded fixed-navbar">
 
@@ -282,7 +300,9 @@
             <li class=" navigation-header"><span>General</span><i  data-placement="right"
                                                                   data-original-title="General" class=" ft-minus"></i>
             </li>
+            <li><a href={{url('/cliente')}}><i class="fa fa-database"></i>Clientes</a></li>
 
+            <li><a href={{url('/puesto/buscar')}}><i class="fa fa-calendar"></i>Buscar Puesto</a></li>
             <li class=" nav-item"><a href="#">
                     <i class="ft-home"></i>
                     <span data-i18n="" class="menu-title">Personal Ejecutivo</span></a>

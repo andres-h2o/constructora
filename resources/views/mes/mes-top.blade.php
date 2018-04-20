@@ -7,11 +7,14 @@
     @include('alerts.existfail')
     <div class="container">
         <div class="row">
-
+            <br>
+            <a class="button" style="font-size: 10px;" title="Ir atras" href="{{ URL::previous() }}">
+                <span class="dashicons dashicons-admin-generic"></span><i class="fa fa-mail-reply"></i> Volver Atras
+            </a>
 
             <div class="col-md-9">
                 <div class="card">
-                    <div class="card-header">Meses</div>
+                    <div class="card-header"><h3>Top Mensual</h3> </div>
                     <div class="card-body">
 
                         <div class="table-responsive">
