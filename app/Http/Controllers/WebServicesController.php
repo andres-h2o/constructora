@@ -125,7 +125,7 @@ class WebServicesController extends Controller
             return json_encode(array("confirmacion" => 0));
         }
     }
-    public function resrvar($id_vendedor, $id_cliente, $id_puesto, $monto, $id_tipoReserva)
+    public function reservar($id_vendedor, $id_cliente, $id_puesto, $monto, $id_tipoReserva)
     {
         $puesto = Puesto::find($id_puesto);
         if ($puesto->estado == "libre") {
@@ -141,10 +141,12 @@ class WebServicesController extends Controller
                     ->where('id_proyecto', '=', $id_proyecto)
                     ->select('id')->orderBy('id', 'desc')->get()->first()->id;
 
-
+                $dias = TipoReserva::find($id_tipoReserva)->dias_reales;
                 Reserva::create([
                     'fecha' => Carbon::now()->toDateString(),
+                    'fecha_fin' => Carbon::now()->toDateString(),
                     'monto' => $monto,
+                    'dias' => $dias,
                     'id_vendedor' => $id_vendedor,
                     'id_cliente' => $id_cliente,
                     'id_puesto' => $id_puesto,

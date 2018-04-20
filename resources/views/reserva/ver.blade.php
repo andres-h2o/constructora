@@ -7,7 +7,9 @@
 
             <div class="col-md-9">
                 <div class="card">
-                    <div class="card-header"><h2><strong>Ver Reserva</strong></h2> <h1>Puesto <strong>{{ $puesto->numero }}</strong></h1><h4><strong>{{ $puesto->proyecto }}</strong> --- Módulo  : {{ $puesto->modulo }} ---  Bloque  : {{ $puesto->bloque }}</h4></div>
+                    <div class="card-header">
+                        <h2><strong>Ver Reserva</strong></h2> <br>
+                        <h4><strong>{{ $puesto->proyecto }}</strong> </h4><h4> Módulo  : {{ $puesto->modulo }} ---  Bloque  : {{ $puesto->bloque }} --- Puesto <strong>{{ $puesto->numero }}</strong></h4></div>
                     <div class="card-body">
 
 
@@ -17,13 +19,14 @@
 
                             <div class="form-group {{ $errors->has('dias') ? 'has-error' : ''}}">
                                 <div class="col-md-6">
-                                    <h3><strong>Fecha : </strong> {{$reserva->created_at}}<br><br>
+                                    <h3><strong>Cliente : </strong> {{$cliente->nombre}}<br>
+                                        <strong>C.I. : </strong> {{$cliente->ci}}<br><br>
+                                    </h3><h5><strong>Fecha : </strong> {{$reserva->created_at}}<br><br>
                                         <strong>Dias Restantes : </strong> {{$restantes}}<br><br>
                                         <strong>Monto :</strong> {{$reserva->monto}} $us<br><br>
                                         <strong>Vendedor : </strong> {{$vendedor->nombre}}<br><br>
-                                        <strong>Cliente : </strong> {{$cliente->nombre}}<br><br>
                                         <strong>Tipo de reserva : </strong> {{$tipo_reserva->nombre}}
-                                    </h3>
+                                    </h5>
                                 </div>
                             </div>
 
