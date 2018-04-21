@@ -49,7 +49,7 @@
                                             </a>
                                         @endif
                                     </td>
-                                    <td style="background-color: {{ $item->color }};color: white;text-align:center; font-size: xx-large ">
+                                    <td style="background-color: {{ $item->color }};color: white;text-align:center; font-size: xx-large ;text-shadow: 2px 2px 4px black">
                                         <strong>{{ $item->categoria }}</strong></td>
                                     <td style="text-align:center"><strong>{{ $item->proyecto }}</strong><br>Módulo
                                         :{{ $item->modulo }}<br>Bloque :{{ $item->bloque }}</td>

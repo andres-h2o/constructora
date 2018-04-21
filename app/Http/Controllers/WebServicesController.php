@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Expr\Cast\Object_;
 use PhpParser\Node\Stmt\Return_;
 use Illuminate\Support\Facades\Input;
@@ -28,7 +29,7 @@ class WebServicesController extends Controller
 
         $vendedor = Vendedor::find($id);
         if ($vendedor != '') {
-            if ($vendedor->ci == $ci) {
+            if ($vendedor->codigo == $ci) {
 
                 return json_encode(array("respuesta" => 1, "vendedor" => $vendedor));
 
@@ -125,12 +126,13 @@ class WebServicesController extends Controller
             return json_encode(array("confirmacion" => 0));
         }
     }
+
     public function reservar($id_vendedor, $id_cliente, $id_puesto, $monto, $id_tipoReserva)
     {
         $puesto = Puesto::find($id_puesto);
         if ($puesto->estado == "libre") {
             $vendido = Ventum::where('id_puesto', '=', $id_puesto)->get()->first();
-            $reserva = Reserva::where('estado','=',1)
+            $reserva = Reserva::where('estado', '=', 1)
                 ->where('id_puesto', '=', $id_puesto)->get()->first();
             if ($vendido == '' and $reserva == '') {
                 $id_proyecto = Puesto::join('bloques as b', 'b.id', '=', 'puestos.id_bloque')
@@ -248,18 +250,34 @@ class WebServicesController extends Controller
     public function guardarImagen($id_vendedor)
     {
 
-        $lista = array();
+        /*$lista = array();
         array_push($lista, array("andres" => 1));
         array_push($lista, array("andres" => 1));
         array_push($lista, array("andres" => 1));
         array_push($lista, array("andres" => 1));
-        return $lista;
+        return $lista;*/
 
         $imagen = Input::get('imagen');
+        $token = Input::get('token');
         Vendedor::find($id_vendedor)->update([
-            'imagen' => $imagen
+            'imagen' => $imagen . "&token=" . $token
         ]);
         return json_encode(array("confirmacion" => 1));
+    }
+
+    public function cambiarPassword($id_vendedor, $contra1, $contra2)
+    {
+        $vendedor = Vendedor::find($id_vendedor);
+        if ($vendedor->codigo == $contra1) {
+            $vendedor->update([
+                "codigo" => $contra2
+            ]);
+
+            return json_encode(array("confirmacion" => 1));
+        } else {
+
+            return json_encode(array("confirmacion" => 0));
+        }
     }
 
     public function puestosBloqueados($id_vendedor)
@@ -269,13 +287,13 @@ class WebServicesController extends Controller
         return json_encode(array("puestos" => $puestos));
     }
 
-    public function encontrar($id_vendedor,$bloque)
+    public function encontrar($id_vendedor, $bloque)
     {
-        $id_proyecto = Vendedor::join('grupos as g','g.id','id_grupo')
-            ->where('vendedors.id','=',$id_vendedor)->get()->first()->id_proyecto;
-        $puesto=Input::get('puesto');
+        $id_proyecto = Vendedor::join('grupos as g', 'g.id', 'id_grupo')
+            ->where('vendedors.id', '=', $id_vendedor)->get()->first()->id_proyecto;
+        $puesto = Input::get('puesto');
 
-        if($puesto== ''){
+        if ($puesto == '') {
             $puesto = Puesto::join('categorias as c', 'c.id', '=', 'puestos.id_categoria')
                 ->join('bloques as b', 'b.id', '=', 'puestos.id_bloque')
                 ->join('modulos as m', 'm.id', '=', 'b.id_modulo')
@@ -299,7 +317,7 @@ class WebServicesController extends Controller
                     'c.cuota_mensual',
                     'c.plazo_meses'
                 )->orderBy('puestos.id', 'asc')->get();
-        }else{
+        } else {
             $puesto = Puesto::join('categorias as c', 'c.id', '=', 'puestos.id_categoria')
                 ->join('bloques as b', 'b.id', '=', 'puestos.id_bloque')
                 ->join('modulos as m', 'm.id', '=', 'b.id_modulo')
@@ -327,10 +345,119 @@ class WebServicesController extends Controller
         }
         if ($puesto->first() != "") {
 
-            return json_encode(array("confiracion"=>1,"puestos"=>$puesto));
-        }else{
+            return json_encode(array("confiracion" => 1, "puestos" => $puesto));
+        } else {
 
-            return json_encode(array("confiracion"=>0));
+            return json_encode(array("confiracion" => 0));
         }
+    }
+
+    public function mostrarTopMensual($id_vendedor)
+    {
+        $id_proyecto = Vendedor::join('grupos as g', 'g.id', 'id_grupo')
+            ->where('vendedors.id', '=', $id_vendedor)->get()->first()->id_proyecto;
+        $id_mes = Me::where('estado', '=', 1)
+            ->where('id_proyecto', '=', $id_proyecto)
+            ->select('id')->orderBy('id', 'desc')->get()->first()->id;
+        $mes = Me::find($id_mes);
+        $grupo = Grupo::where('id_proyecto', '=', $mes->id_proyecto)->get()->first();
+
+        $trabajadores = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
+            ->where('id_grupo', '=', $grupo->id)->select(
+                'vendedors.id as id',
+                'vendedors.nombre as nombre',
+                'imagen',
+                DB::raw('count(*) as nro')
+            )->groupBy('vendedors.id', 'vendedors.nombre', 'imagen')
+            ->orderBy('nro', 'desc')->get();
+        $lista = array();
+        foreach ($trabajadores as $item) {
+            $ventasContado = Ventum::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 1)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasContado = ($ventasContado != "") ? $ventasContado->nro : 0;
+            $ventasCredito = Ventum::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 2)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasCredito = ($ventasCredito != "") ? $ventasCredito->nro : 0;
+            $reservas = Reserva::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $reservas = ($reservas != "") ? $reservas->nro : 0;
+            array_push($lista, array(
+                "nombre" => $item->nombre,
+                "imagen" => $item->imagen,
+                "contado" => $ventasContado,
+                "credito" => $ventasCredito,
+                "reserva" => $reservas,
+                "puntos" => $ventasCredito + $ventasContado,
+                "falta" => 50 - ($ventasCredito + $ventasContado),
+                "meta" => 50
+            ));
+        }
+        return json_encode(array("top" => $lista));
+
+    }
+
+    public function mostrarTopDiario($id_vendedor)
+    {
+        $id_proyecto = Vendedor::join('grupos as g', 'g.id', 'id_grupo')
+            ->where('vendedors.id', '=', $id_vendedor)->get()->first()->id_proyecto;
+        $id_mes = Me::where('estado', '=', 1)
+            ->where('id_proyecto', '=', $id_proyecto)
+            ->select('id')->orderBy('id', 'desc')->get()->first()->id;
+        $mes = Me::find($id_mes);
+        $grupo = Grupo::where('id_proyecto', '=', $mes->id_proyecto)->get()->first();
+
+        $trabajadores = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
+            ->where('id_grupo', '=', $grupo->id)
+            ->where('fecha', '=', Carbon::now()->toDateString())
+            ->select(
+                'vendedors.id as id',
+                'vendedors.nombre as nombre',
+                'imagen',
+                DB::raw('count(*) as nro')
+            )->groupBy('vendedors.id', 'vendedors.nombre', 'imagen')
+            ->orderBy('nro', 'desc')->get();
+        $lista = array();
+        foreach ($trabajadores as $item) {
+            $ventasContado = Ventum::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 1)
+                ->where('fecha', '=', Carbon::now()->toDateString())
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasContado = ($ventasContado != "") ? $ventasContado->nro : 0;
+            $ventasCredito = Ventum::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 2)
+                ->where('fecha', '=', Carbon::now()->toDateString())
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasCredito = ($ventasCredito != "") ? $ventasCredito->nro : 0;
+            $reservas = Reserva::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('fecha', '=', Carbon::now()->toDateString())
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $reservas = ($reservas != "") ? $reservas->nro : 0;
+            array_push($lista, array(
+                "nombre" => $item->nombre,
+                "imagen" => $item->imagen,
+                "contado" => $ventasContado,
+                "credito" => $ventasCredito,
+                "reserva" => $reservas,
+                "puntos" => $ventasCredito + $ventasContado,
+                "falta" => 50 - ($ventasCredito + $ventasContado),
+                "meta" => 50
+            ));
+        }
+        return json_encode(array("top" => $lista));
+
     }
 }

@@ -13,6 +13,7 @@ use App\Reserva;
 use App\Vendedor;
 use App\Ventum;
 use Barryvdh\DomPDF\PDF;
+use Carbon\Carbon;
 use FontLib\TrueType\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -353,5 +354,58 @@ from vendedors as v,ventas as ven
         }
         return view('mes.top',compact('lista','trabajadores'));
 
+    }
+
+    public function verTopDiario($id_proyecto)
+    {
+        $id_mes = Me::where('estado', '=', 1)
+            ->where('id_proyecto', '=', $id_proyecto)
+            ->select('id')->orderBy('id', 'desc')->get()->first()->id;
+        $mes = Me::find($id_mes);
+        $grupo = Grupo::where('id_proyecto', '=', $mes->id_proyecto)->get()->first();
+
+        $trabajadores = Vendedor::join('ventas as v','v.id_vendedor','=','vendedors.id')
+            ->where('id_grupo', '=', $grupo->id)
+            ->where('fecha', '=', Carbon::now()->toDateString())
+            ->select(
+                'vendedors.id as id',
+                'vendedors.nombre as nombre',
+                'imagen',
+                DB::raw('count(*) as nro')
+            )->groupBy('vendedors.id','vendedors.nombre','imagen')
+            ->orderBy('nro','desc')->get();
+        $lista = array();
+        foreach ($trabajadores as $item) {
+            $ventasContado = Ventum::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 1)
+                ->where('fecha', '=', Carbon::now()->toDateString())
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasContado = ($ventasContado != "") ? $ventasContado->nro : 0;
+            $ventasCredito = Ventum::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 2)
+                ->where('fecha', '=', Carbon::now()->toDateString())
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasCredito = ($ventasCredito != "") ? $ventasCredito->nro : 0;
+            $reservas = Reserva::where('id_mes', '=', $id_mes)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('fecha', '=', Carbon::now()->toDateString())
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $reservas = ($reservas != "") ? $reservas->nro : 0;
+            array_push($lista,array(
+                "nombre" => $item->nombre,
+                "contado" => $ventasContado,
+                "credito" => $ventasCredito,
+                "reserva" => $reservas,
+                "puntos" => $ventasCredito + $ventasContado,
+                "falta"=>50-($ventasCredito + $ventasContado),
+                "meta"=>50
+            ));
+        }
+        return view('mes.top-diario',compact('lista','trabajadores'));
     }
 }

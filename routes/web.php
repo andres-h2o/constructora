@@ -40,6 +40,7 @@ Route::post('mes/guardar/{id_mes}', 'MesController@guardar');
 Route::get('mes/imprimir/{id_mes}', 'MesController@informeGeneral');
 Route::get('mes/top-proyectos', 'MesController@topProyectos');
 Route::get('mes/ver-top/{id_proyecto}', 'MesController@verMesesTop');
+Route::get('mes/ver-top-diario/{id_proyecto}', 'MesController@verTopDiario');
 Route::get('mes/top/{id_mes}', 'MesController@irTop');
 Route::post('json-clientes', 'ClienteController@clientesVendedor');
 Route::get('cliente/ver-puestos/{id_cliente}', 'ClienteController@verPuestos');
@@ -87,3 +88,6 @@ Route::get('cliente/listardos/{id_vendedor}', 'WebServicesController@listarClien
 Route::get('vendedor/imagen/{id_vendedor}', 'WebServicesController@guardarImagen');
 Route::get('puestos/bloqueados/{id_vendedor}', 'WebServicesController@puestosBloqueados');
 Route::get('puesto/encontrar/{id_vendedor}/{bloque}', 'WebServicesController@encontrar');
+Route::get('top/mensual/{id_vendedor}', 'WebServicesController@mostrarTopMensual');
+Route::get('top/diario/{id_vendedor}', 'WebServicesController@mostrarTopDiario');
+Route::get('cliente/contra/{id_vendedor}/{contra1}/{contra2}', 'WebServicesController@cambiarPassword');

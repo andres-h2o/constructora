@@ -14,16 +14,17 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Nombre</th><th>Zona</th><th>Actions</th>
+                                        <th>#</th><th>Nombre</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($proyecto as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->nombre }}</td><td>{{ $item->zona }}</td>
+                                        <td>{{ $item->nombre }}</td>
                                         <td>
                                             <a href="{{ url('/mes/ver-top/' . $item->id) }}" title="Ver Meses"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Ver Meses</button></a>
+                                            <a href="{{ url('/mes/ver-top-diario/' . $item->id) }}" title="Top Diario"><button class="btn btn-blue btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Ver Top Diario</button></a>
 
 
                                             {{--<form method="POST" action="{{ url('/proyecto' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">

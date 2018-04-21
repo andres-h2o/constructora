@@ -53,8 +53,8 @@
                                             </a>
                                         @endif
                                     </td>
-                                    <td style="background-color: {{ $item->color }};color: white;text-align:center; font-size: xx-large ">
-                                        <strong>{{ $item->categoria }}</strong></td>
+                                    <td style="background-color: {{ $item->color }};color: white;text-align:center; font-size: xx-large ;text-shadow: 2px 2px 4px black">
+                                       <BR> <strong>{{ $item->categoria }}</strong></td>
                                     <td style="text-align:center"><strong>{{ $item->proyecto }}</strong><br>Módulo
                                         :{{ $item->modulo }}<br>Bloque :{{ $item->bloque }}</td>
                                     <td style="text-align:center">Contado : {{ $item->precio }} $us<br><strong>A
