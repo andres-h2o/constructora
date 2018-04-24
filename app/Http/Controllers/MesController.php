@@ -261,7 +261,9 @@ class MesController extends Controller
 
         $trabajadores = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
             ->join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
-            ->where('id_proyecto', '=', $mes->id_proyecto)->select(
+            ->where('id_proyecto', '=', $mes->id_proyecto)
+            ->where('estado_venta', '=', 1)
+            ->select(
                 'vendedors.id as id',
                 'vendedors.nombre as nombre',
                 'imagen',
@@ -273,17 +275,20 @@ class MesController extends Controller
             $ventasContado = Ventum::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('id_tipo_venta', '=', 1)
+                ->where('estado_venta', '=', 1)
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $ventasContado = ($ventasContado != "") ? $ventasContado->nro : 0;
             $ventasCredito = Ventum::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('id_tipo_venta', '=', 2)
+                ->where('estado_venta', '=', 1)
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $ventasCredito = ($ventasCredito != "") ? $ventasCredito->nro : 0;
             $reservas = Reserva::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
+                ->where('estado', '=', 1)
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $reservas = ($reservas != "") ? $reservas->nro : 0;
@@ -306,13 +311,15 @@ class MesController extends Controller
     {
         $id_mes = Me::where('estado', '=', 1)
             ->where('id_proyecto', '=', $id_proyecto)
-            ->select('id')->orderBy('id', 'desc')->get()->first()->id;
+            ->select('id')->orderBy('id', 'desc')
+            ->get()->first()->id;
         $mes = Me::find($id_mes);
 
         $trabajadores = Vendedor::join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
             ->join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
             ->where('id_proyecto', '=', $mes->id_proyecto)
             ->where('fecha', '=', Carbon::now()->toDateString())
+            ->where('estado_venta', '=', 1)
             ->select(
                 'vendedors.id as id',
                 'vendedors.nombre as nombre',
@@ -325,6 +332,7 @@ class MesController extends Controller
             $ventasContado = Ventum::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('id_tipo_venta', '=', 1)
+                ->where('estado_venta', '=', 1)
                 ->where('fecha', '=', Carbon::now()->toDateString())
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
@@ -332,6 +340,7 @@ class MesController extends Controller
             $ventasCredito = Ventum::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('id_tipo_venta', '=', 2)
+                ->where('estado_venta', '=', 1)
                 ->where('fecha', '=', Carbon::now()->toDateString())
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
@@ -339,6 +348,7 @@ class MesController extends Controller
             $reservas = Reserva::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('fecha', '=', Carbon::now()->toDateString())
+                ->where('estado', '=', 1)
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $reservas = ($reservas != "") ? $reservas->nro : 0;

@@ -53,7 +53,7 @@
                                     <div class="col-md-offset-4 col-md-4">
                                         <br>
                                         <input class="btn btn-primary" type="submit"
-                                               value="{{  'Actualizar' }}">
+                                               value="{{  'Actualizar' }}" onclick="return confirm('Seguro que desea Actualizar el estado de la Reserva?')">
                                     </div>
                                 </div>
 

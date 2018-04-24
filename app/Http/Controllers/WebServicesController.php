@@ -443,7 +443,9 @@ class WebServicesController extends Controller
 
         $trabajadores = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
             ->join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
-            ->where('id_proyecto', '=', $mes->id_proyecto)->select(
+            ->where('id_proyecto', '=', $mes->id_proyecto)
+            ->where('estado_venta', '=', 1)
+            ->select(
                 'vendedors.id as id',
                 'vendedors.nombre as nombre',
                 'imagen',
@@ -455,17 +457,20 @@ class WebServicesController extends Controller
             $ventasContado = Ventum::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('id_tipo_venta', '=', 1)
+                ->where('estado_venta', '=', 1)
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $ventasContado = ($ventasContado != "") ? $ventasContado->nro : 0;
             $ventasCredito = Ventum::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('id_tipo_venta', '=', 2)
+                ->where('estado_venta', '=', 1)
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $ventasCredito = ($ventasCredito != "") ? $ventasCredito->nro : 0;
             $reservas = Reserva::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
+                ->where('estado', '=', 1)
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $reservas = ($reservas != "") ? $reservas->nro : 0;
@@ -496,6 +501,7 @@ class WebServicesController extends Controller
         $trabajadores = Vendedor::join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
             ->join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
             ->where('id_proyecto', '=', $mes->id_proyecto)
+            ->where('estado_venta', '=', 1)
             ->where('fecha', '=', Carbon::now()->toDateString())
             ->select(
                 'vendedors.id as id',
@@ -508,6 +514,7 @@ class WebServicesController extends Controller
         foreach ($trabajadores as $item) {
             $ventasContado = Ventum::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
+                ->where('estado_venta', '=', 1)
                 ->where('id_tipo_venta', '=', 1)
                 ->where('fecha', '=', Carbon::now()->toDateString())
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
@@ -515,6 +522,7 @@ class WebServicesController extends Controller
             $ventasContado = ($ventasContado != "") ? $ventasContado->nro : 0;
             $ventasCredito = Ventum::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
+                ->where('estado_venta', '=', 1)
                 ->where('id_tipo_venta', '=', 2)
                 ->where('fecha', '=', Carbon::now()->toDateString())
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
@@ -522,6 +530,7 @@ class WebServicesController extends Controller
             $ventasCredito = ($ventasCredito != "") ? $ventasCredito->nro : 0;
             $reservas = Reserva::where('id_mes', '=', $id_mes)
                 ->where('id_vendedor', '=', $item->id)
+                ->where('estado', '=', 1)
                 ->where('fecha', '=', Carbon::now()->toDateString())
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
