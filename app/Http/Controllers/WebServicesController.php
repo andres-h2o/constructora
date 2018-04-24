@@ -8,9 +8,11 @@ use App\Categorium;
 use App\Cliente;
 use App\Grupo;
 use App\Me;
+use App\Mensaje;
 use App\Modulo;
 use App\Puesto;
 use App\Reserva;
+use App\TipoReserva;
 use App\Vendedor;
 use App\Ventum;
 use Carbon\Carbon;
@@ -127,6 +129,78 @@ class WebServicesController extends Controller
         }
     }
 
+    public function venderReservado($id_vendedor, $id_reserva, $monto, $id_tipoVenta)
+    {
+        $reserva = Reserva::find($id_reserva);
+        $puesto = Puesto::find($reserva->id_puesto);
+
+
+        $id_proyecto = Puesto::join('bloques as b', 'b.id', '=', 'puestos.id_bloque')
+            ->join('modulos as m', 'm.id', '=', 'b.id_modulo')
+            ->where('puestos.id', '=', $reserva->id_puesto)->select('m.id_proyecto as id_proyecto')->get()->first()->id_proyecto;
+
+        $id_mes = Me::where('estado', '=', 1)
+            ->where('id_proyecto', '=', $id_proyecto)
+            ->select('id')->orderBy('id', 'desc')->get()->first()->id;
+
+
+        Ventum::create([
+            'fecha' => Carbon::now()->toDateString(),
+            'monto' => $monto,
+            'id_vendedor' => $id_vendedor,
+            'id_cliente' => $reserva->id_cliente,
+            'id_puesto' => $reserva->id_puesto,
+            'id_mes' => $id_mes,
+            'id_tipo_venta' => $id_tipoVenta,
+            'estado_venta' => 1
+        ]);
+        $puesto->update([
+            'estado' => 'vendido'
+        ]);
+        $reserva->update([
+            'estado' => 0
+        ]);
+        return json_encode(array("confirmacion" => 1));
+
+
+    }
+
+    public function venderBloqueado($id_vendedor, $id_bloqueo,$id_cliente, $monto, $id_tipoVenta)
+    {
+        $bloqueo = Bloqueo::find($id_bloqueo);
+        $puesto = Puesto::find($bloqueo->id_puesto);
+
+
+        $id_proyecto = Puesto::join('bloques as b', 'b.id', '=', 'puestos.id_bloque')
+            ->join('modulos as m', 'm.id', '=', 'b.id_modulo')
+            ->where('puestos.id', '=', $bloqueo->id_puesto)->select('m.id_proyecto as id_proyecto')->get()->first()->id_proyecto;
+
+        $id_mes = Me::where('estado', '=', 1)
+            ->where('id_proyecto', '=', $id_proyecto)
+            ->select('id')->orderBy('id', 'desc')->get()->first()->id;
+
+
+        Ventum::create([
+            'fecha' => Carbon::now()->toDateString(),
+            'monto' => $monto,
+            'id_vendedor' => $id_vendedor,
+            'id_cliente' => $id_cliente,
+            'id_puesto' => $bloqueo->id_puesto,
+            'id_mes' => $id_mes,
+            'id_tipo_venta' => $id_tipoVenta,
+            'estado_venta' => 1
+        ]);
+        $puesto->update([
+            'estado' => 'vendido'
+        ]);
+        $bloqueo->update([
+            'estado' => 0
+        ]);
+        return json_encode(array("confirmacion" => 1));
+
+
+    }
+
     public function reservar($id_vendedor, $id_cliente, $id_puesto, $monto, $id_tipoReserva)
     {
         $puesto = Puesto::find($id_puesto);
@@ -172,6 +246,7 @@ class WebServicesController extends Controller
         $reservas = Reserva::join('tipo_reservas as t', 't.id', '=', 'id_tipoReserva')
             ->join('clientes as c', 'c.id', '=', 'id_cliente')
             ->join('puestos as p', 'p.id', '=', 'id_puesto')
+            ->join('categorias as cl', 'cl.id', '=', 'p.id_categoria')
             ->join('bloques as b', 'b.id', '=', 'p.id_bloque')
             ->join('modulos as m', 'm.id', '=', 'b.id_modulo')
             ->where('reservas.id_vendedor', '=', $id_vendedor)
@@ -182,8 +257,13 @@ class WebServicesController extends Controller
                 't.nombre as tipoReserva',
                 'p.nro as puesto',
                 'b.numero as bloque',
-                'm.nro as modulo'
-            )->orderBy('reservas.id', 'desc')->get();
+                'm.nro as modulo',
+                'cl.nombre as categoria',
+                'cl.color as color',
+                'cl.precio as precio',
+                'cl.cuota_inicial as cuota_inicial',
+                'cl.cuota_mensual',
+                'cl.plazo_meses')->orderBy('reservas.id', 'desc')->get();
         return json_encode(array("reservas" => $reservas));
 
     }
@@ -360,10 +440,10 @@ class WebServicesController extends Controller
             ->where('id_proyecto', '=', $id_proyecto)
             ->select('id')->orderBy('id', 'desc')->get()->first()->id;
         $mes = Me::find($id_mes);
-        $grupo = Grupo::where('id_proyecto', '=', $mes->id_proyecto)->get()->first();
 
         $trabajadores = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
-            ->where('id_grupo', '=', $grupo->id)->select(
+            ->join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
+            ->where('id_proyecto', '=', $mes->id_proyecto)->select(
                 'vendedors.id as id',
                 'vendedors.nombre as nombre',
                 'imagen',
@@ -412,10 +492,10 @@ class WebServicesController extends Controller
             ->where('id_proyecto', '=', $id_proyecto)
             ->select('id')->orderBy('id', 'desc')->get()->first()->id;
         $mes = Me::find($id_mes);
-        $grupo = Grupo::where('id_proyecto', '=', $mes->id_proyecto)->get()->first();
 
-        $trabajadores = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
-            ->where('id_grupo', '=', $grupo->id)
+        $trabajadores = Vendedor::join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
+            ->join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
+            ->where('id_proyecto', '=', $mes->id_proyecto)
             ->where('fecha', '=', Carbon::now()->toDateString())
             ->select(
                 'vendedors.id as id',
@@ -458,6 +538,37 @@ class WebServicesController extends Controller
             ));
         }
         return json_encode(array("top" => $lista));
+    }
 
+    public function trabajadores($id_vendedor)
+    {
+        $id_proyecto = Vendedor::join('grupos as g', 'g.id', 'id_grupo')
+            ->where('vendedors.id', '=', $id_vendedor)->get()->first()->id_proyecto;
+
+        $trabajadores = Vendedor::join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
+            ->where('g.nombre', '!=', "adm")
+            ->where('id_proyecto', '=', $id_proyecto)
+            ->select(
+                'vendedors.id as id',
+                'vendedors.nombre as nombre',
+                'vendedors.telefono as telefono',
+                'imagen',
+                'g.nombre as grupo'
+            )->orderBy('g.nombre', 'asc')->orderBy('nombre', 'asc')->get();
+        return json_encode(array("vendedores" => $trabajadores));
+    }
+
+
+
+    public function mensajes($id_vendedor)
+    {
+        $id_proyecto = Vendedor::join('grupos as g', 'g.id', 'id_grupo')
+            ->where('vendedors.id', '=', $id_vendedor)->get()->first()->id_proyecto;
+        $mensajes =Mensaje::where('id_proyecto','=',$id_proyecto)
+            ->select(
+                'id',
+                'title', 'content','id_proyecto','created_at as fecha'
+            )->orderBy('id','desc')->get();
+        return json_encode(array("mensajes"=>$mensajes));
     }
 }

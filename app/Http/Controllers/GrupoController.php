@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Coordinador;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Grupo;
+use App\Proyecto;
 use Illuminate\Http\Request;
 
 class GrupoController extends Controller
@@ -44,7 +46,9 @@ class GrupoController extends Controller
      */
     public function create()
     {
-        return view('grupo.create');
+        $coordinadores = Coordinador::all()->pluck('nombre','id');
+        $proyectos = Proyecto::all()->pluck('nombre','id');
+        return view('grupo.create',compact('coordinadores','proyectos'));
     }
 
     /**

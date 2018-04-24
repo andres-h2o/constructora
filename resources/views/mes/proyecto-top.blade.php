@@ -5,10 +5,8 @@
             <div class="col-md-9">
                 <div class="card">
                     <br>
-                    <a class="button" style="font-size: 10px;" title="Ir atras" href="{{ URL::previous() }}">
-                        <span class="dashicons dashicons-admin-generic"></span><i class="fa fa-mail-reply"></i> Volver Atras
-                    </a>
-                    <div class="card-header">Elegir Proyecto Para ver Top Mensuales</div>
+
+                    <div class="card-header"><h3>Elegir Proyecto Para ver Top </h3> </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table">

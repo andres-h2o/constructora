@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 
 @section('contenido')
+    @include('alerts.request')
+    @include('alerts.success')
+    @include('alerts.existfail')
     <div class="container">
         <div class="row">
 
@@ -54,7 +57,7 @@
                                 @endforeach
                                 </tbody>
                             </table>
-                            <div class="pagination-wrapper"> {!! $cliente->appends(['search' => Request::get('search')])->render() !!} </div>
+                            <div class="pagination"> {!! $cliente->appends(['search' => Request::get('search')])->render() !!} </div>
                         </div>
 
                     </div>

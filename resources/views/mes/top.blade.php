@@ -31,15 +31,23 @@
 
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{array_values(array_values($lista)[$loop->iteration-1])[0]}}</td>
-                                        <td>{{array_values(array_values($lista)[$loop->iteration-1])[1]}}</td>
-                                        <td>{{array_values(array_values($lista)[$loop->iteration-1])[2]}}</td>
-                                        <td>{{array_values(array_values($lista)[$loop->iteration-1])[3]}}</td>
-                                        <td>{{array_values(array_values($lista)[$loop->iteration-1])[4]}}</td>
-                                        <td>{{array_values(array_values($lista)[$loop->iteration-1])[5]}}</td>
-                                        <td>{{array_values(array_values($lista)[$loop->iteration-1])[6]}}</td>
-
-
+                                        <td>
+                                            @if(array_values(array_values($lista)[$loop->iteration-1])[7]!="")
+                                            <div class="circular--portrait">
+                                                <img src="{{array_values(array_values($lista)[$loop->iteration-1])[7]}}" class="imgRedonda" >
+                                            </div>
+                                                @else
+                                                <div class="circular--portrait">
+                                                    <img src="http://localhost:8080/constructora/public/admin/app-assets/images/portrait/small/avatar-s-1.png" class="imgRedonda" >
+                                                </div>
+                                            @endif
+                                            {{array_values(array_values($lista)[$loop->iteration-1])[0]}}</td>
+                                        <td><br>{{array_values(array_values($lista)[$loop->iteration-1])[1]}}</td>
+                                        <td><br>{{array_values(array_values($lista)[$loop->iteration-1])[2]}}</td>
+                                        <td><br>{{array_values(array_values($lista)[$loop->iteration-1])[3]}}</td>
+                                        <td><br>{{array_values(array_values($lista)[$loop->iteration-1])[4]}}</td>
+                                        <td><br>{{array_values(array_values($lista)[$loop->iteration-1])[5]}}</td>
+                                        <td><br>{{array_values(array_values($lista)[$loop->iteration-1])[6]}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>

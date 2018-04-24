@@ -237,6 +237,6 @@ class ReservaController extends Controller
         }
         $puesto =Puesto::find($reserva->id_puesto);
         Session::flash('message', 'Reserva Actualizada correctamente!');
-        return redirect('/puesto/listar/'.$puesto->id_bloque);
+        return redirect('cliente/ver-puestos/'.$reserva->id_cliente."");
     }
 }

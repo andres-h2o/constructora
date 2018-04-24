@@ -17,7 +17,7 @@
         <div class="col-md-9">
             <div class="card">
                 <br>
-                <a class="button" style="font-size: 10px;" title="Ir atras" href="{{ URL::previous() }}">
+                <a class="button" style="font-size: 10px;" title="Ir atras" href="{{url('/cliente')}}">
                     <span class="dashicons dashicons-admin-generic"></span><i class="fa fa-mail-reply"></i> Volver Atras
                 </a>
                 <div class="card-header"><h1 style="text-align: center"><strong>Reservas y Compras</strong> </h1><br><h2>Cliente <strong>{{ $cliente->nombre }}</strong></h2><h2>CI :{{ $cliente->ci }}</h2></div>
@@ -74,6 +74,11 @@
     </div>
     </div>
     @else
-    <div><h2 style="color: red;text-align: center"> No tiene puestos comprados ni reservados</h2></div>
+    <div>
+        <br>
+        <a class="button" style="font-size: 10px;" title="Ir atras" href="{{url('/cliente')}}">
+            <span class="dashicons dashicons-admin-generic"></span><i class="fa fa-mail-reply"></i> Volver Atras
+        </a>
+        <h2 style="color: red;text-align: center"> No tiene puestos comprados ni reservados</h2></div>
     @endif
 @endsection

@@ -25,7 +25,7 @@ class Ventum extends Model
      *
      * @var array
      */
-    protected $fillable = ['fecha', 'monto', 'id_puesto', 'id_vendedor','id_cliente', 'id_mes', 'id_tipo_venta'];
+    protected $fillable = ['fecha', 'monto', 'id_puesto', 'id_vendedor','id_cliente', 'id_mes', 'id_tipo_venta','estado_venta'];
 
     
 }

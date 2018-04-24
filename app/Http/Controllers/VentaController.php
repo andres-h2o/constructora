@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Puesto;
 use App\Ventum;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class VentaController extends Controller
 {
@@ -139,5 +141,25 @@ class VentaController extends Controller
         Ventum::destroy($id);
 
         return redirect('venta')->with('flash_message', 'Ventum deleted!');
+    }
+    public function actualizarVenta(Request $request, $id_venta)
+    {
+        $this->validate($request, [
+            'estado' => 'required'
+        ]);
+
+        Ventum::find($id_venta)->update([
+            'estado_venta'=>$request['estado']
+        ]);
+        $venta=Ventum::find($id_venta);
+        if($request['estado']==0){
+            Puesto::find($venta->id_puesto)->update([
+                'estado'=>"libre"
+            ]);
+            Session::flash('message', 'Venta Anulada correctamente!');
+        }
+        $puesto =Puesto::find($venta->id_puesto);
+
+        return redirect('cliente/ver-puestos/'.$venta->id_cliente."");
     }
 }

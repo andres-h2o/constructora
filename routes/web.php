@@ -33,6 +33,7 @@ Route::post('reserva/guardar/{id_puesto}/{id_proyecto}', 'ReservaController@guar
 Route::get('bloqueo/nuevo/{id_puesto}/{id_proyecto}', 'BloqueoController@nuevoBloqueo');
 Route::post('bloqueo/guardar/{id_puesto}', 'BloqueoController@guardarBloqueo');
 Route::post('reserva/actualizar/{id_reserva}', 'ReservaController@actualizarReserva')->name('reserva.actualizar');
+Route::post('venta/actualizar/{id_venta}', 'VentaController@actualizarVenta');
 Route::post('bloqueo/actualizar/{id_bloqueo}', 'BloqueoController@actualizarBloqueo');
 Route::get('mes/ver/{id_proyecto}', 'MesController@verMeses');
 Route::get('mes/nuevo/{id_mes}', 'MesController@nuevo');
@@ -79,6 +80,8 @@ Route::get('modulos/{id_proyecto}', 'WebServicesController@modulos');
 Route::get('bloques/{id_modulo}', 'WebServicesController@bloques');
 Route::get('puestos/{id_bloque}', 'WebServicesController@puestos');
 Route::get('vender/{id_vendedor}/{id_cliente}/{id_puesto}/{monto}/{id_tipoVenta}', 'WebServicesController@vender');
+Route::get('vender-reservado/{id_vendedor}/{id_reserva}/{monto}/{id_tipoVenta}', 'WebServicesController@venderReservado');
+Route::get('vender/bloqueado/{id_vendedor}/{id_bloqueo}/{id_cliente}/{monto}/{id_tipoVenta}', 'WebServicesController@venderBloqueado');
 Route::get('reservar/{id_vendedor}/{id_cliente}/{id_puesto}/{monto}/{id_tipoReserva}', 'WebServicesController@reservar');
 Route::get('reservasVer/{id_vendedor}', 'WebServicesController@reservas');
 Route::get('ventasVer/{id_vendedor}', 'WebServicesController@ventas');
@@ -91,3 +94,7 @@ Route::get('puesto/encontrar/{id_vendedor}/{bloque}', 'WebServicesController@enc
 Route::get('top/mensual/{id_vendedor}', 'WebServicesController@mostrarTopMensual');
 Route::get('top/diario/{id_vendedor}', 'WebServicesController@mostrarTopDiario');
 Route::get('cliente/contra/{id_vendedor}/{contra1}/{contra2}', 'WebServicesController@cambiarPassword');
+Route::get('trabajadores/{id_vendedor}', 'WebServicesController@trabajadores');
+Route::get('mensajes/{id_vendedor}', 'WebServicesController@mensajes');
+
+Route::resource('mensaje', 'MensajeController');

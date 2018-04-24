@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Grupo;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -47,7 +48,8 @@ class VendedorController extends Controller
      */
     public function create()
     {
-        return view('vendedor.create');
+        $grupos = Grupo::all()->pluck('nombre','id');
+        return view('vendedor.create',compact('grupos'));
     }
 
     /**
@@ -63,16 +65,21 @@ class VendedorController extends Controller
 			'nombre' => 'string',
 			'telefono' => 'integer',
 			'direccion' => 'string',
-			'estado' => 'integer',
-			'codigo' => 'integer',
 			'ci' => 'string',
 			'id_grupo' => 'integer'
 		]);
-        $requestData = $request->all();
         
-        Vendedor::create($requestData);
+        Vendedor::create([
+            'nombre'=>$request['nombre'],
+            'telefono'=>$request['telefono'],
+            'direccion'=>$request['direccion'],
+            'ci'=>$request['ci'],
+            'id_grupo'=>$request['id_grupo'],
+            'codigo'=>'123abc',
+            'estado'=>1,
+        ]);
 
-        return redirect('vendedor')->with('flash_message', 'Vendedor added!');
+        return redirect('vendedor')->with('message', 'Vendedor added!');
     }
 
     /**

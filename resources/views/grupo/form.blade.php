@@ -11,18 +11,20 @@
         {!! $errors->first('detalle', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('id_proyecto') ? 'has-error' : ''}}">
-    <label for="id_proyecto" class="col-md-4 control-label">{{ 'Id Proyecto' }}</label>
+    <label for="id_vendedor" class="col-md-4 control-label">{{ 'Proyecto' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="id_proyecto" type="number" id="id_proyecto" value="{{ $grupo->id_proyecto or ''}}" required>
+        {!! Form::select('id_proyecto', $proyectos, null, ['class' => 'form-control']) !!}
         {!! $errors->first('id_proyecto', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('id_coordinador') ? 'has-error' : ''}}">
-    <label for="id_coordinador" class="col-md-4 control-label">{{ 'Id Coordinador' }}</label>
+</div>
+<div class="form-group {{ $errors->has('id_coordinador') ? 'has-error' : ''}}">
+    <label for="id_vendedor" class="col-md-4 control-label">{{ 'Coordinador' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="id_coordinador" type="number" id="id_coordinador" value="{{ $grupo->id_coordinador or ''}}" required>
+        {!! Form::select('id_coordinador', $coordinadores, null, ['class' => 'form-control']) !!}
         {!! $errors->first('id_coordinador', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
+
 
 <div class="form-group">
     <div class="col-md-offset-4 col-md-4">

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Cliente;
 use App\Puesto;
+use App\Reserva;
 use App\Vendedor;
 use App\Ventum;
 use Illuminate\Http\Request;
@@ -93,8 +94,8 @@ class ClienteController extends Controller
     public function edit($id)
     {
         $cliente = Cliente::findOrFail($id);
-
-        return view('cliente.edit', compact('cliente'));
+        $vendedores=Vendedor::all()->pluck('nombre','id');
+        return view('cliente.edit', compact('cliente','vendedores'));
     }
 
     /**
@@ -145,12 +146,37 @@ class ClienteController extends Controller
 
     public function verPuestos($id_cliente)
     {
+        $puestos1= Reserva::join('puestos as p','p.id','=','reservas.id_puesto')
+            ->join('categorias as c','c.id','id_categoria')
+            ->join('bloques as b','b.id','p.id_bloque')
+            ->join('modulos as m','m.id','b.id_modulo')
+            ->join('proyectos as pr','pr.id','m.id_proyecto')
+            ->where('id_cliente','=',$id_cliente)
+            ->where('reservas.estado','=',1)
+            ->select(
+                'p.id',
+                'p.nro as numero',
+                'largo',
+                'ancho',
+                'p.estado',
+                'pr.nombre as proyecto',
+                'pr.id as id_proyecto',
+                'm.nro as modulo',
+                'b.numero as bloque',
+                'c.nombre as categoria',
+                'c.color as color',
+                'c.precio as precio',
+                'c.cuota_inicial as cuota_inicial',
+                'c.cuota_mensual',
+                'c.plazo_meses'
+            )->orderBy('p.id','asc');
         $puestos= Ventum::join('puestos as p','p.id','=','ventas.id_puesto')
             ->join('categorias as c','c.id','id_categoria')
             ->join('bloques as b','b.id','p.id_bloque')
             ->join('modulos as m','m.id','b.id_modulo')
             ->join('proyectos as pr','pr.id','m.id_proyecto')
             ->where('id_cliente','=',$id_cliente)
+            ->where('estado_venta','=',1)
             ->select(
                 'p.id',
                 'p.nro as numero',
@@ -167,7 +193,7 @@ class ClienteController extends Controller
                 'c.cuota_inicial as cuota_inicial',
                 'c.cuota_mensual',
                 'c.plazo_meses'
-            )->orderBy('p.id','asc')->get();
+            )->orderBy('p.id','asc')->unionAll($puestos1)->get();
 
 $cliente = Cliente::find($id_cliente);
         return view('cliente.puestos', compact('puestos','cliente'));

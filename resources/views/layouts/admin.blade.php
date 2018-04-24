@@ -74,6 +74,21 @@
         background-color: #FB7E29;
         color: #fff;
     }
+    .circular--portrait {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        overflow: hidden;
+        border-radius: 50%;
+        box-shadow: 1px 2px 3px black;
+
+    }
+
+    .circular--portrait img {
+        width: 100%;
+        height: auto;
+        box-shadow: 2px 2px 5px black;
+    }
 </style>
 <body data-open="click" data-menu="vertical-menu-modern" data-col="2-columns"
       class="vertical-layout vertical-menu-modern 2-columns   menu-expanded fixed-navbar">
@@ -98,168 +113,8 @@
         <div class="navbar-container content container-fluid">
             <div id="navbar-mobile" class="collapse navbar-toggleable-sm">
                 <ul class="nav navbar-nav">
-                    <li class="dropdown nav-item mega-dropdown"><a href="#" data-toggle="dropdown"
-                                                                   class="dropdown-toggle nav-link">Mega</a>
-                        <ul class="mega-dropdown-menu dropdown-menu row">
-                            <li class="col-md-2">
-                                <h6 class="dropdown-menu-header text-uppercase mb-1"><i class="fa fa-newspaper-o"></i>
-                                    News</h6>
-                                <div id="mega-menu-carousel-example">
-                                    <div><img src="{{asset('admin/app-assets/images/slider/slider-2.png')}}"
-                                              alt="First slide" class="rounded img-fluid mb-1"><a href="#"
-                                                                                                  class="news-title mb-0">Poster
-                                            Frame PSD</a>
-                                        <p class="news-content"><span class="font-small-2">January 26, 2016</span></p>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="col-md-3">
-                                <h6 class="dropdown-menu-header text-uppercase"><i class="fa fa-random"></i> Drill down
-                                    menu</h6>
-                                <ul class="drilldown-menu">
-                                    <li class="menu-list">
-                                        <ul>
-                                            <li><a href="layout-2-columns.html" class="dropdown-item"><i
-                                                            class="ft-file"></i> Page layouts & Templates</a></li>
-                                            <li><a href="#"><i class="ft-align-left"></i> Multi level menu</a>
-                                                <ul>
-                                                    <li><a href="#" class="dropdown-item"><i
-                                                                    class="fa fa-bookmark-o"></i> Second level</a></li>
-                                                    <li><a href="#"><i class="fa fa-lemon-o"></i> Second level menu</a>
-                                                        <ul>
-                                                            <li><a href="#" class="dropdown-item"><i
-                                                                            class="fa fa-heart-o"></i> Third level</a>
-                                                            </li>
-                                                            <li><a href="#" class="dropdown-item"><i
-                                                                            class="fa fa-file-o"></i> Third level</a>
-                                                            </li>
-                                                            <li><a href="#" class="dropdown-item"><i
-                                                                            class="fa fa-trash-o"></i> Third level</a>
-                                                            </li>
-                                                            <li><a href="#" class="dropdown-item"><i
-                                                                            class="fa fa-clock-o"></i> Third level</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="#" class="dropdown-item"><i class="fa fa-hdd-o"></i>
-                                                            Second level, third link</a></li>
-                                                    <li><a href="#" class="dropdown-item"><i class="fa fa-floppy-o"></i>
-                                                            Second level, fourth link</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="color-palette-primary.html" class="dropdown-item"><i
-                                                            class="ft-camera"></i> Color pallet system</a></li>
-                                            <li><a href="sk-2-columns.html" class="dropdown-item"><i
-                                                            class="ft-edit"></i> Page starter kit</a></li>
-                                            <li><a href="changelog.html" class="dropdown-item"><i
-                                                            class="ft-minimize-2"></i> Change log</a></li>
-                                            <li><a href="http://support.pixinvent.com/" class="dropdown-item"><i
-                                                            class="fa fa-life-ring"></i> Customer support center</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="col-md-3">
-                                <h6 class="dropdown-menu-header text-uppercase"><i class="fa fa-list-ul"></i> Accordion
-                                </h6>
-                                <div id="accordionWrap" role="tablist" aria-multiselectable="true">
-                                    <div class="card no-border box-shadow-0 collapse-icon accordion-icon-rotate">
-                                        <div id="headingOne" role="tab" class="card-header p-0 pb-2 no-border"><a
-                                                    data-toggle="collapse" data-parent="#accordionWrap"
-                                                    href="#accordionOne" aria-expanded="true"
-                                                    aria-controls="accordionOne">Accordion Item #1</a></div>
-                                        <div id="accordionOne" role="tabpanel" aria-labelledby="headingOne"
-                                             aria-expanded="true" class="card-collapse collapse in">
-                                            <div class="card-body">
-                                                <p class="accordion-text text-small-3">Caramels dessert chocolate cake
-                                                    pastry jujubes bonbon. Jelly wafer jelly beans. Caramels chocolate
-                                                    cake liquorice cake wafer jelly beans croissant apple pie.</p>
-                                            </div>
-                                        </div>
-                                        <div id="headingTwo" role="tab" class="card-header p-0 pb-2 no-border"><a
-                                                    data-toggle="collapse" data-parent="#accordionWrap"
-                                                    href="#accordionTwo" aria-expanded="false"
-                                                    aria-controls="accordionTwo" class="collapsed">Accordion Item #2</a>
-                                        </div>
-                                        <div id="accordionTwo" role="tabpanel" aria-labelledby="headingTwo"
-                                             aria-expanded="false" class="card-collapse collapse">
-                                            <div class="card-body">
-                                                <p class="accordion-text">Sugar plum bear claw oat cake chocolate jelly
-                                                    tiramisu dessert pie. Tiramisu macaroon muffin jelly marshmallow
-                                                    cake. Pastry oat cake chupa chups.</p>
-                                            </div>
-                                        </div>
-                                        <div id="headingThree" role="tab" class="card-header p-0 pb-2 no-border"><a
-                                                    data-toggle="collapse" data-parent="#accordionWrap"
-                                                    href="#accordionThree" aria-expanded="false"
-                                                    aria-controls="accordionThree" class="collapsed">Accordion Item
-                                                #3</a></div>
-                                        <div id="accordionThree" role="tabpanel" aria-labelledby="headingThree"
-                                             aria-expanded="false" class="card-collapse collapse">
-                                            <div class="card-body">
-                                                <p class="accordion-text">Candy cupcake sugar plum oat cake wafer
-                                                    marzipan jujubes lollipop macaroon. Cake dragée jujubes donut
-                                                    chocolate bar chocolate cake cupcake chocolate topping.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="col-md-4">
-                                <h6 class="dropdown-menu-header text-uppercase mb-1"><i class="fa fa-envelope-o"></i>
-                                    Contact Us</h6>
-                                <form>
-                                    <fieldset class="form-group">
-                                        <label for="inputName1" class="col-sm-3 form-control-label">Name</label>
-                                        <div class="col-sm-9">
-                                            <div class="position-relative has-icon-left">
-                                                <input type="text" id="inputName1" placeholder="John Doe"
-                                                       class="form-control">
-                                                <div class="form-control-position"><i class="fa fa-user-o pl-1"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="form-group">
-                                        <label for="inputEmail1" class="col-sm-3 form-control-label">Email</label>
-                                        <div class="col-sm-9">
-                                            <div class="position-relative has-icon-left">
-                                                <input type="email" id="inputEmail1" placeholder="john@example.com"
-                                                       class="form-control">
-                                                <div class="form-control-position pl-1"><i class="fa fa-envelope-o"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="form-group">
-                                        <label for="inputMessage1" class="col-sm-3 form-control-label">Message</label>
-                                        <div class="col-sm-9">
-                                            <div class="position-relative has-icon-left">
-                                                <textarea id="inputMessage1" rows="2" placeholder="Simple Textarea"
-                                                          class="form-control"></textarea>
-                                                <div class="form-control-position pl-1"><i
-                                                            class="fa fa-commenting-o"></i></div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                    <div class="col-sm-12 mb-1">
-                                        <button type="button" class="btn btn-primary float-xs-right"><i
-                                                    class="fa fa-paper-plane-o"></i> Send
-                                        </button>
-                                    </div>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
                     <li class="nav-item hidden-sm-down"><a href="#" class="nav-link nav-link-expand"><i
                                     class="ficon ft-maximize"></i></a></li>
-                    <li class="nav-item nav-search"><a href="#" class="nav-link nav-link-search"><i
-                                    class="ficon ft-search"></i></a>
-                        <div class="search-input">
-                            <input type="text" placeholder="Explore Stack..." class="input">
-                        </div>
-                    </li>
                 </ul>
                 <ul class="nav navbar-nav float-xs-right">
 
@@ -321,14 +176,14 @@
                 <ul class="menu-content">
                     <li><a href={{url('/proyecto')}}><i class="fa fa-ravelry"></i>Proyectos</a>
                     </li>
-                    <li><a href={{url('/modulo')}}><i class="fa fa-ravelry"></i>Modulos</a>
+                    {{--<li><a href={{url('/modulo')}}><i class="fa fa-ravelry"></i>Modulos</a>
                     </li>
                     <li><a href={{url('/bloque')}}><i class="fa fa-ravelry"></i>Bloques</a>
-                    </li>
+                    </li>--}}
                     <li><a href={{url('/categoria')}}><i class="fa fa-ravelry"></i>Categoria</a>
                     </li>
-                    <li><a href={{url('/puesto')}}><i class="fa fa-ravelry"></i>Puesto</a>
-                    </li>
+                   {{-- <li><a href={{url('/puesto')}}><i class="fa fa-ravelry"></i>Puesto</a>
+                    </li>--}}
                 </ul>
             </li>
 
@@ -336,12 +191,12 @@
             <li class=" nav-item"><a href="#"><i class="fa fa-user"></i>
                     <span data-i18n=""class="menu-title">Ventas y Reservas</span></a>
                 <ul class="menu-content">
-                    <li><a href={{url('/venta')}}><i class="fa fa-ravelry"></i>Ventas</a>
+                    {{--<li><a href={{url('/venta')}}><i class="fa fa-ravelry"></i>Ventas</a>
                     </li>
                     <li><a href={{url('/reserva')}}><i class="fa fa-ravelry"></i>Reserva</a>
                     </li>
                     <li><a href={{url('/bloqueo')}}><i class="fa fa-ravelry"></i>Bloqueo</a>
-                    </li>
+                    </li>--}}
                     <li><a href={{url('/tipo-venta')}}><i class="fa fa-ravelry"></i>Tipos de Venta</a>
                     </li>
                     <li><a href={{url('/tipo-reserva')}}><i class="fa fa-ravelry"></i>Tipos de Reserva</a>
@@ -359,7 +214,7 @@
                     </li>
                 </ul>
             </li>
-
+            <li><a href={{url('/mensaje')}}><i class="fa fa-database"></i>Mensajes</a></li>
         </ul>
     </div>
 </div>

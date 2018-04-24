@@ -189,7 +189,8 @@ class MesController extends Controller
         )->orderBy('id', 'desc')->get();
         return view('mes.index', compact('mes'));
     }
-public function verMesesTop($id_proyecto)
+
+    public function verMesesTop($id_proyecto)
     {
         $mes = Me::where('id_proyecto', '=', $id_proyecto)->select(
             'id',
@@ -203,71 +204,13 @@ public function verMesesTop($id_proyecto)
     public function informeGeneral($id_mes)
     {
 
-        /* $reservas = Vendedor::join('reservas as r', 'r.id_vendedor', '=', 'vendedors.id')
-             ->where('r.id_mes', '=', $id_mes)
-             ->where('r.estado','=',1)
-             ->select(
-                 'vendedors.nombre as vendedor',
-                 DB::raw('sum(1) as nroReserva'),
-                 DB::raw('sum(r.monto) as Reserva'),
-                 DB::raw('0 as nroContado'),
-                 DB::raw('0 as Contado'),
-                 DB::raw('0 as nroCredito'),
-                 DB::raw('0 as Credito')
-             )->groupBy('vendedors.nombre');
-         $ventasContado = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
-             ->where('v.id_mes', '=', $id_mes)
-             ->where('v.id_tipo_venta', '=', 1)
-             ->select(
-                 'vendedors.nombre as vendedor',
-                 DB::raw('0 as nroReserva'),
-                 DB::raw('0 as Reserva'),
-                 DB::raw('sum(1) as nroContado'),
-                 DB::raw('sum(v.monto) as Contado'),
-                 DB::raw('0 as nroCredito'),
-                 DB::raw('0 as Credito')
-             )->groupBy('vendedors.nombre')->unionAll($reservas);
-
-         $ventasCredito = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
-             ->where('v.id_mes', '=', $id_mes)
-             ->where('v.id_tipo_venta', '=', 2)
-             ->select(
-                 'vendedors.nombre as vendedor',
-                 DB::raw('0 as nroReserva'),
-                 DB::raw('0 as Reserva'),
-                 DB::raw('0 as nroContado'),
-                 DB::raw('0 as Contado'),
-                 DB::raw('sum(1) as nroCredito'),
-                 DB::raw('sum(v.monto) as Credito')
-             )->groupBy('vendedors.nombre')->union($ventasContado)->get();
- return $ventasCredito;*/
-        /*$datos = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
-            ->join('reservas as r', 'r.id_vendedor', '=', 'vendedors.id')
-            ->where('v.id_mes', '=', $id_mes)
-            ->where('r.id_mes', '=', $id_mes)
-            ->select(
-                'vendedors.nombre as vendedor',
-                DB::raw('sum(v.monto)as ventasContado'),
-                DB::raw('count(v.id) as nro_ventas'),
-                DB::raw('count(r.id) as nro_reservas')
-            )->groupBy('vendedors.nombre')->get();
-        $datos1 = DB::raw('select v.nombre,
-sum(case  WHEN ven.id_tipo_venta = 1 then ven.monto else 0 end) as montoContado,
-sum(case  WHEN ven.id_tipo_venta = 2 then ven.monto else 0 end) as montoCredito,
-sum(case  WHEN ven.id_tipo_venta = 1 then 1 else 0 end) as nroContado,
-sum(case  WHEN ven.id_tipo_venta = 2 then 1 else 0 end) as nroCredito
-from vendedors as v,ventas as ven
-                    where v.id = ven.id_vendedor
-                    and ven.id_mes = '.$id_mes.
-                     ' GROUP BY v.nombre');
-        return $datos1;*/
         $datos = DB::select('select v.nombre as vendedor,
                           sum(case  WHEN ven.id_tipo_venta = 1 then ven.monto else 0 end) as montoContado,
                           sum(case  WHEN ven.id_tipo_venta = 2 then ven.monto else 0 end) as montoCredito,
                           sum(case  WHEN ven.id_tipo_venta = 1 then 1 else 0 end) as nroContado,
                           sum(case  WHEN ven.id_tipo_venta = 2 then 1 else 0 end) as nroCredito
                           from vendedors as v,ventas as ven
-                                            where v.id = ven.id_vendedor
+                                            where v.id = ven.id_vendedor and ven.estado_venta = 1
                     and ven.id_mes = ?
                      GROUP BY v.nombre', [$id_mes]);
         $total = 0;
@@ -312,17 +255,19 @@ from vendedors as v,ventas as ven
 
     public function irTop($id_mes)
     {
-        $mes = Me::find($id_mes);
-        $grupo = Grupo::where('id_proyecto', '=', $mes->id_proyecto)->get()->first();
 
-        $trabajadores = Vendedor::join('ventas as v','v.id_vendedor','=','vendedors.id')
-            ->where('id_grupo', '=', $grupo->id)->select(
+
+        $mes = Me::find($id_mes);
+
+        $trabajadores = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
+            ->join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
+            ->where('id_proyecto', '=', $mes->id_proyecto)->select(
                 'vendedors.id as id',
                 'vendedors.nombre as nombre',
+                'imagen',
                 DB::raw('count(*) as nro')
-            )->groupBy('vendedors.id','vendedors.nombre')->orderBy('nro','desc')->get();
-
-
+            )->groupBy('vendedors.id', 'vendedors.nombre', 'imagen')
+            ->orderBy('nro', 'desc')->get();
         $lista = array();
         foreach ($trabajadores as $item) {
             $ventasContado = Ventum::where('id_mes', '=', $id_mes)
@@ -342,17 +287,18 @@ from vendedors as v,ventas as ven
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $reservas = ($reservas != "") ? $reservas->nro : 0;
-            array_push($lista,array(
+            array_push($lista, array(
                 "nombre" => $item->nombre,
                 "contado" => $ventasContado,
                 "credito" => $ventasCredito,
                 "reserva" => $reservas,
                 "puntos" => $ventasCredito + $ventasContado,
-                "falta"=>50-($ventasCredito + $ventasContado),
-                "meta"=>50
+                "falta" => 50 - ($ventasCredito + $ventasContado),
+                "meta" => 50,
+                "imagen"=>$item->imagen
             ));
         }
-        return view('mes.top',compact('lista','trabajadores'));
+        return view('mes.top', compact('lista', 'trabajadores'));
 
     }
 
@@ -362,18 +308,18 @@ from vendedors as v,ventas as ven
             ->where('id_proyecto', '=', $id_proyecto)
             ->select('id')->orderBy('id', 'desc')->get()->first()->id;
         $mes = Me::find($id_mes);
-        $grupo = Grupo::where('id_proyecto', '=', $mes->id_proyecto)->get()->first();
 
-        $trabajadores = Vendedor::join('ventas as v','v.id_vendedor','=','vendedors.id')
-            ->where('id_grupo', '=', $grupo->id)
+        $trabajadores = Vendedor::join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
+            ->join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
+            ->where('id_proyecto', '=', $mes->id_proyecto)
             ->where('fecha', '=', Carbon::now()->toDateString())
             ->select(
                 'vendedors.id as id',
                 'vendedors.nombre as nombre',
                 'imagen',
                 DB::raw('count(*) as nro')
-            )->groupBy('vendedors.id','vendedors.nombre','imagen')
-            ->orderBy('nro','desc')->get();
+            )->groupBy('vendedors.id', 'vendedors.nombre', 'imagen')
+            ->orderBy('nro', 'desc')->get();
         $lista = array();
         foreach ($trabajadores as $item) {
             $ventasContado = Ventum::where('id_mes', '=', $id_mes)
@@ -396,16 +342,16 @@ from vendedors as v,ventas as ven
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $reservas = ($reservas != "") ? $reservas->nro : 0;
-            array_push($lista,array(
+            array_push($lista, array(
                 "nombre" => $item->nombre,
                 "contado" => $ventasContado,
                 "credito" => $ventasCredito,
                 "reserva" => $reservas,
                 "puntos" => $ventasCredito + $ventasContado,
-                "falta"=>50-($ventasCredito + $ventasContado),
-                "meta"=>50
+                "falta" => 50 - ($ventasCredito + $ventasContado),
+                "meta" => 50
             ));
         }
-        return view('mes.top-diario',compact('lista','trabajadores'));
+        return view('mes.top-diario', compact('lista', 'trabajadores'));
     }
 }

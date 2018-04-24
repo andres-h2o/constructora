@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Categorium;
+use App\Proyecto;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
@@ -47,7 +48,9 @@ class CategoriaController extends Controller
      */
     public function create()
     {
-        return view('categoria.create');
+
+        $proyectos = Proyecto::all()->pluck('nombre','id');
+        return view('categoria.create',compact('proyectos'));
     }
 
     /**
@@ -100,7 +103,8 @@ class CategoriaController extends Controller
     {
         $categorium = Categorium::findOrFail($id);
 
-        return view('categoria.edit', compact('categorium'));
+        $proyectos = Proyecto::all()->pluck('nombre','id');
+        return view('categoria.edit', compact('categorium','proyectos'));
     }
 
     /**

@@ -1,7 +1,9 @@
 @extends('layouts.admin')
 
 @section('contenido')
+<style>
 
+</style>
     <div class="container">
         <div class="row">
 
@@ -18,13 +20,14 @@
                             --- Puesto <strong>{{ $puesto->numero }}</strong></h3>
                     </div>
                     <div class="card-body">
-
-
+                        <form method="POST" action="{{ url('/venta/actualizar/'.$venta->id) }}"
+                              accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                            {{ csrf_field() }}
 
                             <div class="form-group {{ $errors->has('dias') ? 'has-error' : ''}}">
                                 <div class="col-md-6">
                                     <h3><strong>Cliente : </strong> {{$cliente->nombre}}<br><br>
-                                    <strong>CI : </strong> {{$cliente->ci}}<br><br>
+                                        <strong>CI : </strong> {{$cliente->ci}}<br><br>
                                     </h3><h5><strong>Fecha : </strong> {{$venta->created_at}}<br><br>
                                         <strong>Tipo de Venta : </strong> {{$tipoVenta->nombre}} <br><br>
                                         <strong>Monto :</strong> {{$venta->monto}} $us<br><br>
@@ -32,6 +35,31 @@
                                     </h5>
                                 </div>
                             </div>
+
+
+                            <div class="form-group {{ $errors->has('estado') ? 'has-error' : ''}}"><h2><strong>
+
+                                        {!! Form::label('estado', 'Estado', ['class' => 'col-md-4 control-label']) !!}
+                                    </strong></h2>
+                                <div class="col-md-6">
+                                    {!! Form::select('estado', [1=>'ACTIVA', 0=>'ANULADA'], $venta->estado_venta, ['class' => 'form-control']) !!}
+                                    {!! $errors->first('estado', '<p class="help-block">:message</p>') !!}
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-4 col-md-4">
+                                    <br>
+                                    <input class="btn btn-primary" type="submit"
+                                           value="{{  'Actualizar' }}" onclick="return confirm('Seguro que desea Actualizar el estado de la venta?')">
+                                </div>
+                            </div>
+
+
+                        </form>
+
+
+
 
 
 

@@ -35,12 +35,13 @@
         {!! $errors->first('plazo_meses', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('id_proyecto') ? 'has-error' : ''}}">
-    <label for="id_proyecto" class="col-md-4 control-label">{{ 'Id Proyecto' }}</label>
+    <label for="id_vendedor" class="col-md-4 control-label">{{ 'Proyecto' }}</label>
     <div class="col-md-6">
-        <input class="form-control" name="id_proyecto" type="number" id="id_proyecto" value="{{ $categorium->id_proyecto or ''}}" required>
+        {!! Form::select('id_proyecto', $proyectos, null, ['class' => 'form-control']) !!}
         {!! $errors->first('id_proyecto', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
+
 
 <div class="form-group">
     <div class="col-md-offset-4 col-md-4">
