@@ -471,7 +471,8 @@ class MesController extends Controller
                 "reserva" => $reservas,
                 "puntos" => $ventasCredito + $ventasContado,
                 "falta" => 50 - ($ventasCredito + $ventasContado),
-                "meta" => 50
+                "meta" => 50,
+                "imagen"=>$item->imagen
             ));
         }
         return view('mes.top-diario', compact('lista', 'trabajadores'));

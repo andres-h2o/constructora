@@ -38,8 +38,18 @@
                                         <td>
                                             @if($item->imagen!="")
                                                 <div class="circular--portrait">
-                                                    <a href="{{$item->imagen}}" target="_blank">
+                                                    <a href="{{$item->imagen}}" data-toggle="modal" data-target="{{"#".$item->id."ventana"}}">
                                                         <img src="{{$item->imagen}}" class="imgRedonda" ></a>
+                                                </div>
+                                                <div class="modal fade" id="{{$item->id."ventana"}}" tabindex="-1" role="dialog" align="center"   aria-label="miModalLavel1" aria-hidden="true" >
+
+                                                    <img src="{{$item->imagen}}" class="center"></a>
+                                                    {{--<div class="padre">
+                                                        <div class="hijo">
+
+                                                        </div>
+                                                    </div>--}}
+
                                                 </div>
                                             @else
                                                 <div class="circular--portrait">

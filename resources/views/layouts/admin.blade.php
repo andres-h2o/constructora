@@ -89,6 +89,35 @@
         height: auto;
         box-shadow: 2px 2px 5px black;
     }
+    .centrar {
+        display:table-cell;
+        vertical-align:middle;
+    }
+    .center {
+        position: absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        margin: auto;
+        background: #83C24A;
+        height: 100px;
+        width: 200px;
+        box-shadow: 0 0 4px rgba(0,0,0,.3);
+    }
+    .padre {
+        position: relative;
+    }
+    .hijo {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 50%;
+        height: 30%;
+        margin: auto;
+    }
 </style>
 <body data-open="click" data-menu="vertical-menu-modern" data-col="2-columns"
       class="vertical-layout vertical-menu-modern 2-columns   menu-expanded fixed-navbar">

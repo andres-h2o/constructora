@@ -32,12 +32,17 @@
                                         <td>
                                             @if(array_values(array_values($lista)[$loop->iteration-1])[7]!="")
                                                 <div class="circular--portrait">
-                                                    <a href="{{array_values(array_values($lista)[$loop->iteration-1])[7]}}" target="_blank">
+                                                    <a href="{{array_values(array_values($lista)[$loop->iteration-1])[7]}}" data-toggle="modal" data-target="{{"#".$loop->iteration."ventana"}}">
                                                         <img src="{{array_values(array_values($lista)[$loop->iteration-1])[7]}}" class="imgRedonda" ></a>
+                                                </div>
+                                                <div class="modal fade" id="{{$loop->iteration."ventana"}}" tabindex="-1" role="dialog" align="center"   aria-label="miModalLavel1" aria-hidden="true" >
+
+                                                    <img  class="center" src="{{array_values(array_values($lista)[$loop->iteration-1])[7]}}"></a>
+
                                                 </div>
                                             @else
                                                 <div class="circular--portrait">
-                                                    <img src="http://manueldeveloper.xyz/constructora/public/admin/app-assets/images/portrait/small/avatar-s-1.png" class="imgRedonda" >
+                                                    <img src="http://manueldeveloper.xyz/constructora/public/admin/app-assets/images/portrait/small/avatar-s-1.png" >
                                                 </div>
                                             @endif
                                             {{array_values(array_values($lista)[$loop->iteration-1])[0]}}</td>

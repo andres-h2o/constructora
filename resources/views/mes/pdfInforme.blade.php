@@ -96,7 +96,7 @@
         </div>
     </div>
 </div>
-
+<h5 style="text-align: right"> Fecha de impresión: {{Jenssegers\Date\Date::now()->toDateTimeString()}}</h5>
 
 </body>
 </html>
