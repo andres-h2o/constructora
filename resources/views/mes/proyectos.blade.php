@@ -24,6 +24,7 @@
                                         <td>
                                             <a href="{{ url('/mes/ver/' . $item->id) }}" title="Ver Meses"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Ver Meses</button></a>
 
+                                            <a href="{{ url('/mes/informe-proyecto/' . $item->id) }}" title="informe Proyecto" target="_blank"><button class="btn btn-warning btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Ver Informe</button></a>
 
                                             {{--<form method="POST" action="{{ url('/proyecto' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}

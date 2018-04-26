@@ -48,7 +48,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ url('/mes/imprimir/' . $item->id) }}" title="View Me">
+                                                <a href="{{ url('/mes/imprimir/' . $item->id) }}" target="_blank" title="View Me">
                                                     <button class="btn btn-info btn-sm">
                                                         <i class="fa fa-eye" aria-hidden="true"></i> Ver e Imprimir
                                                     </button>

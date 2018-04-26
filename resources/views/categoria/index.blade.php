@@ -39,13 +39,13 @@
                                         <td>{{ $item->nombre }}</td><td style="background-color: {{ $item->color }}"></td><td>{{ $item->precio }} $us</td>
                                         <td>
                                             <a href="{{ url('/categoria/' . $item->id) }}" title="View Categorium"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
-                                            <a href="{{ url('/categoria/' . $item->id . '/edit') }}" title="Edit Categorium"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                                            {{--<a href="{{ url('/categoria/' . $item->id . '/edit') }}" title="Edit Categorium"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
 
                                             <form method="POST" action="{{ url('/categoria' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
                                                 <button type="submit" class="btn btn-danger btn-sm" title="Delete Categorium" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                                            </form>
+                                            </form>--}}
                                         </td>
                                     </tr>
                                 @endforeach

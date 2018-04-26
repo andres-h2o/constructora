@@ -96,8 +96,10 @@ class WebServicesController extends Controller
     {
         $puesto = Puesto::find($id_puesto);
         if ($puesto->estado == "libre") {
-            $vendido = Ventum::where('id_puesto', '=', $id_puesto)->get()->first();
-            $reserva = Reserva::where('id_puesto', '=', $id_puesto)->get()->first();
+            $vendido = Ventum::where('id_puesto', '=', $id_puesto)
+                ->where('estado_venta','=',1)->get()->first();
+            $reserva = Reserva::where('id_puesto', '=', $id_puesto)
+                ->where('estado','=',1)->get()->first();
             if ($vendido == '' and $reserva == '') {
                 $id_proyecto = Puesto::join('bloques as b', 'b.id', '=', 'puestos.id_bloque')
                     ->join('modulos as m', 'm.id', '=', 'b.id_modulo')
@@ -205,9 +207,10 @@ class WebServicesController extends Controller
     {
         $puesto = Puesto::find($id_puesto);
         if ($puesto->estado == "libre") {
-            $vendido = Ventum::where('id_puesto', '=', $id_puesto)->get()->first();
-            $reserva = Reserva::where('estado', '=', 1)
-                ->where('id_puesto', '=', $id_puesto)->get()->first();
+            $vendido = Ventum::where('id_puesto', '=', $id_puesto)
+                ->where('estado_venta','=',1)->get()->first();
+            $reserva = Reserva::where('id_puesto', '=', $id_puesto)
+                ->where('estado','=',1)->get()->first();
             if ($vendido == '' and $reserva == '') {
                 $id_proyecto = Puesto::join('bloques as b', 'b.id', '=', 'puestos.id_bloque')
                     ->join('modulos as m', 'm.id', '=', 'b.id_modulo')
@@ -256,6 +259,7 @@ class WebServicesController extends Controller
                 'c.nombre as cliente',
                 't.nombre as tipoReserva',
                 'p.nro as puesto',
+                'reservas.dias',
                 'b.numero as bloque',
                 'm.nro as modulo',
                 'cl.nombre as categoria',
@@ -277,6 +281,7 @@ class WebServicesController extends Controller
             ->join('bloques as b', 'b.id', '=', 'p.id_bloque')
             ->join('modulos as m', 'm.id', '=', 'b.id_modulo')
             ->where('ventas.id_vendedor', '=', $id_vendedor)
+            ->where('ventas.estado_venta', '=', 1)
             ->select(
                 'ventas.id as id',
                 'c.nombre as cliente',
@@ -432,6 +437,57 @@ class WebServicesController extends Controller
         }
     }
 
+    public function mostrarTopProyecto($id_vendedor)
+    {
+        $id_proyecto = Vendedor::join('grupos as g', 'g.id', 'id_grupo')
+            ->where('vendedors.id', '=', $id_vendedor)->get()->first()->id_proyecto;
+        $trabajadores = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
+            ->join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
+            ->where('id_proyecto', '=', $id_proyecto)
+            ->where('estado_venta', '=', 1)
+            ->select(
+                'vendedors.id as id',
+                'vendedors.nombre as nombre',
+                'imagen',
+                DB::raw('count(*) as nro')
+            )->groupBy('vendedors.id', 'vendedors.nombre', 'imagen')
+            ->orderBy('nro', 'desc')->get();
+        $lista = array();
+        foreach ($trabajadores as $item) {
+            $ventasContado = Ventum::join('mes','mes.id','=','id_mes')
+                ->where('id_proyecto', '=', $id_proyecto)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 1)
+                ->where('estado_venta', '=', 1)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasContado = ($ventasContado != "") ? $ventasContado->nro : 0;
+            $ventasCredito = Ventum::join('mes','mes.id','=','id_mes')
+                ->where('id_proyecto', '=', $id_proyecto)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 2)
+                ->where('estado_venta', '=', 1)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasCredito = ($ventasCredito != "") ? $ventasCredito->nro : 0;
+            $reservas = Reserva::join('mes','mes.id','=','id_mes')
+                ->where('id_proyecto', '=', $id_proyecto)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('reservas.estado', '=', 1)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $reservas = ($reservas != "") ? $reservas->nro : 0;
+            array_push($lista, array(
+                "nombre" => $item->nombre,
+                "contado" => $ventasContado,
+                "credito" => $ventasCredito,
+                "reserva" => $reservas,
+                "puntos" => $ventasCredito + $ventasContado,
+                "imagen"=>$item->imagen
+            ));
+        }
+        return json_encode(array("top" => $lista));
+    }
     public function mostrarTopMensual($id_vendedor)
     {
         $id_proyecto = Vendedor::join('grupos as g', 'g.id', 'id_grupo')

@@ -201,6 +201,48 @@ class MesController extends Controller
         return view('mes.mes-top', compact('mes'));
     }
 
+    public function pdfProyecto($id_proyecto)
+    {
+
+        $datos = DB::select('select v.nombre as vendedor,
+                          sum(case  WHEN ven.id_tipo_venta = 1 then ven.monto else 0 end) as montoContado,
+                          sum(case  WHEN ven.id_tipo_venta = 2 then ven.monto else 0 end) as montoCredito,
+                          sum(case  WHEN ven.id_tipo_venta = 1 then 1 else 0 end) as nroContado,
+                          sum(case  WHEN ven.id_tipo_venta = 2 then 1 else 0 end) as nroCredito
+                          from vendedors as v,ventas as ven,mes
+                          where v.id = ven.id_vendedor and ven.estado_venta = 1
+                          and mes.id=ven.id_mes
+                    and mes.id_proyecto = ?
+                     GROUP BY v.nombre', [$id_proyecto]);
+        $total = 0;
+        $totalContado = 0;
+        $totalCredito = 0;
+
+        $nroTotal = 0;
+        $nroContado=0;
+        $nroCredito=0;
+        foreach ($datos as $item) {
+            $total = $total + $item->montoContado + $item->montoCredito;
+            $totalContado = $totalContado + $item->montoContado;
+            $totalCredito = $totalCredito +$item->montoCredito;
+            $nroTotal = $nroTotal + $item->nroContado + $item->nroCredito;
+            $nroContado = $nroContado + $item->nroContado ;
+            $nroCredito = $nroCredito +$item->nroCredito;
+        }
+        $proyecto = Proyecto::find($id_proyecto);
+        $pdf = \PDF::loadView('mes.pdfInformeGeneral', compact(
+            'datos',
+            'proyecto',
+            'total',
+            'nroTotal',
+            'nroContado',
+            'nroCredito',
+            'totalContado',
+            'totalCredito'
+        ));
+        $pdf->setPaper("letter", "landscape");
+        return $pdf->stream('Informe de Ventas ' . $proyecto->nombre . '.pdf');
+    }
     public function informeGeneral($id_mes)
     {
 
@@ -214,16 +256,35 @@ class MesController extends Controller
                     and ven.id_mes = ?
                      GROUP BY v.nombre', [$id_mes]);
         $total = 0;
+        $totalContado = 0;
+        $totalCredito = 0;
+
         $nroTotal = 0;
+        $nroContado=0;
+        $nroCredito=0;
         foreach ($datos as $item) {
             $total = $total + $item->montoContado + $item->montoCredito;
+            $totalContado = $totalContado + $item->montoContado;
+            $totalCredito = $totalCredito +$item->montoCredito;
             $nroTotal = $nroTotal + $item->nroContado + $item->nroCredito;
+            $nroContado = $nroContado + $item->nroContado ;
+            $nroCredito = $nroCredito +$item->nroCredito;
         }
         $mes = Me::find($id_mes);
         $proyecto = Proyecto::find($mes->id_proyecto);
-        $pdf = \PDF::loadView('mes.pdfInforme', compact('mes', 'datos', 'proyecto', 'total', 'nroTotal'));
+        $pdf = \PDF::loadView('mes.pdfInforme', compact(
+            'mes',
+            'datos',
+            'proyecto',
+            'total',
+            'nroTotal',
+            'nroContado',
+            'nroCredito',
+            'totalContado',
+            'totalCredito'
+        ));
         $pdf->setPaper("letter", "landscape");
-        return $pdf->stream('Informe general de Ventas' . Date:: parse($mes->fecha_inicio)->format('F Y') . '.pdf');
+        return $pdf->stream('Informe general de Ventas ' . Date:: parse($mes->fecha_inicio)->format('F Y') . '.pdf');
     }
 
     public function nuevo($id_mes)
@@ -250,6 +311,57 @@ class MesController extends Controller
         ]);
         Session::flash('message', 'Se realizó el Cierre Ccrrectamete y se Abrio nuevo Mes... ');
         return redirect('mes/ver/' . $id_proyecto);
+
+    }
+
+    public function irTopProyecto($id_proyecto)
+    {
+        $trabajadores = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
+            ->join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
+            ->where('id_proyecto', '=', $id_proyecto)
+            ->where('estado_venta', '=', 1)
+            ->select(
+                'vendedors.id as id',
+                'vendedors.nombre as nombre',
+                'imagen',
+                DB::raw('count(*) as nro')
+            )->groupBy('vendedors.id', 'vendedors.nombre', 'imagen')
+            ->orderBy('nro', 'desc')->get();
+        $lista = array();
+        foreach ($trabajadores as $item) {
+            $ventasContado = Ventum::join('mes','mes.id','=','id_mes')
+                ->where('id_proyecto', '=', $id_proyecto)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 1)
+                ->where('estado_venta', '=', 1)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasContado = ($ventasContado != "") ? $ventasContado->nro : 0;
+            $ventasCredito = Ventum::join('mes','mes.id','=','id_mes')
+                ->where('id_proyecto', '=', $id_proyecto)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('id_tipo_venta', '=', 2)
+                ->where('estado_venta', '=', 1)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $ventasCredito = ($ventasCredito != "") ? $ventasCredito->nro : 0;
+            $reservas = Reserva::join('mes','mes.id','=','id_mes')
+                ->where('id_proyecto', '=', $id_proyecto)
+                ->where('id_vendedor', '=', $item->id)
+                ->where('reservas.estado', '=', 1)
+                ->select('id_vendedor', DB::raw('count(*) as nro'))
+                ->groupBy('id_vendedor')->get()->first();
+            $reservas = ($reservas != "") ? $reservas->nro : 0;
+            array_push($lista, array(
+                "nombre" => $item->nombre,
+                "contado" => $ventasContado,
+                "credito" => $ventasCredito,
+                "reserva" => $reservas,
+                "puntos" => $ventasCredito + $ventasContado,
+                "imagen"=>$item->imagen
+            ));
+        }
+        return view('mes.top-proyecto', compact('lista', 'trabajadores'));
 
     }
 

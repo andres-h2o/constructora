@@ -35,7 +35,18 @@
                                 @foreach($vendedor as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->nombre }}</td><td>{{ $item->telefono }}</td><td>{{ $item->direccion }}</td>
+                                        <td>
+                                            @if($item->imagen!="")
+                                                <div class="circular--portrait">
+                                                    <a href="{{$item->imagen}}" target="_blank">
+                                                        <img src="{{$item->imagen}}" class="imgRedonda" ></a>
+                                                </div>
+                                            @else
+                                                <div class="circular--portrait">
+                                                    <img src="http://manueldeveloper.xyz/constructora/public/admin/app-assets/images/portrait/small/avatar-s-1.png" class="imgRedonda" >
+                                                </div>
+                                            @endif
+                                            {{ $item->nombre }}</td><td>{{ $item->telefono }}</td><td>{{ $item->direccion }}</td>
                                         <td>
                                             <a href="{{ url('/vendedor/' . $item->id) }}" title="View Vendedor"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/vendedor/' . $item->id . '/edit') }}" title="Edit Vendedor"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

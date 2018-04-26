@@ -34,11 +34,12 @@
                                         <td>
                                             @if(array_values(array_values($lista)[$loop->iteration-1])[7]!="")
                                             <div class="circular--portrait">
-                                                <img src="{{array_values(array_values($lista)[$loop->iteration-1])[7]}}" class="imgRedonda" >
+                                                <a href="{{array_values(array_values($lista)[$loop->iteration-1])[7]}}" target="_blank">
+                                                <img src="{{array_values(array_values($lista)[$loop->iteration-1])[7]}}" class="imgRedonda" ></a>
                                             </div>
                                                 @else
                                                 <div class="circular--portrait">
-                                                    <img src="http://localhost:8080/constructora/public/admin/app-assets/images/portrait/small/avatar-s-1.png" class="imgRedonda" >
+                                                    <img src="http://manueldeveloper.xyz/constructora/public/admin/app-assets/images/portrait/small/avatar-s-1.png" class="imgRedonda" >
                                                 </div>
                                             @endif
                                             {{array_values(array_values($lista)[$loop->iteration-1])[0]}}</td>

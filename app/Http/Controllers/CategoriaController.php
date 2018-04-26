@@ -87,6 +87,7 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
+
         $categorium = Categorium::findOrFail($id);
 
         return view('categoria.show', compact('categorium'));
@@ -101,10 +102,11 @@ class CategoriaController extends Controller
      */
     public function edit($id)
     {
-        $categorium = Categorium::findOrFail($id);
+        return back();
+       /* $categorium = Categorium::findOrFail($id);
 
         $proyectos = Proyecto::all()->pluck('nombre','id');
-        return view('categoria.edit', compact('categorium','proyectos'));
+        return view('categoria.edit', compact('categorium','proyectos'));*/
     }
 
     /**
@@ -117,7 +119,8 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
+        return back();
+        /*$this->validate($request, [
 			'nombre' => 'required',
 			'color' => 'required',
 			'precio' => 'required',
@@ -131,7 +134,7 @@ class CategoriaController extends Controller
         $categorium = Categorium::findOrFail($id);
         $categorium->update($requestData);
 
-        return redirect('categoria')->with('flash_message', 'Categorium updated!');
+        return redirect('categoria')->with('flash_message', 'Categorium updated!');*/
     }
 
     /**
@@ -143,8 +146,9 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
-        Categorium::destroy($id);
+        return back();
+        /*Categorium::destroy($id);
 
-        return redirect('categoria')->with('flash_message', 'Categorium deleted!');
+        return redirect('categoria')->with('flash_message', 'Categorium deleted!');*/
     }
 }

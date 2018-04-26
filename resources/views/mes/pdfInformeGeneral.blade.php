@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Informe general {{Jenssegers\Date\Date:: parse($mes->fecha_inicio)->format('F Y')}} </title>
+    <title>Informe general {{$proyecto->nombre}} </title>
     {!!Html::style('css/myStyle.css')!!}
 </head>
 <style type="text/css">
@@ -32,13 +32,12 @@
 <body class="page">
 {{--<a class="image featured"><img src="images/cavezera1.png"  style="width: 100%  ;" /></a>--}}
 <div style="text-transform: uppercase;text-align:center">
-    <strong>Resumen Mensual de Ventas </strong>
+    <strong>Resumen general de Ventas </strong>
     <br>
     <strong style="color: red">{{$proyecto->nombre}}</strong>
     <br>
     <strong>{{$proyecto->zona}}</strong>
     <br><br>
-    <strong>Mes : "{{Jenssegers\Date\Date:: parse($mes->fecha_inicio)->format('F Y')}}"</strong>
 </div>
 
 <div class="panel panel-default">
