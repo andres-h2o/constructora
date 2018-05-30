@@ -28,7 +28,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Nombre</th><th>Telefono</th><th>Direccion</th><th>Actions</th>
+                                        <th>#</th><th>Nombre</th><th>Telefono</th><th>Direccion</th><th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,9 +58,10 @@
                                             @endif
                                             {{ $item->nombre }}</td><td>{{ $item->telefono }}</td><td>{{ $item->direccion }}</td>
                                         <td>
-                                            <a href="{{ url('/vendedor/' . $item->id) }}" title="View Vendedor"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
-                                            <a href="{{ url('/vendedor/' . $item->id . '/edit') }}" title="Edit Vendedor"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
-
+                                            <a href="{{ url('/vendedor/' . $item->id) }}" title="Ver Vendedor"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Ver</button></a>
+                                            <a href="{{ url('/vendedor/' . $item->id . '/edit') }}" title="Editar Vendedor"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</button></a>
+                                        {{--    <a href="{{ url('/vendedor/ventaspdf/' . $item->id ) }}" title="Ventas"><button class="btn btn-blue btn-sm"><i class="fa fa-sellsy" aria-hidden="true"></i> Ventas</button></a>--}}
+                                            <a href="{{ url('/vendedor/ventas/' . $item->id ) }}" title="Ventas"><button class="btn btn-blue btn-sm"><i class="fa fa-sellsy" aria-hidden="true"></i> Ventas</button></a>
 
                                         </td>
                                     </tr>

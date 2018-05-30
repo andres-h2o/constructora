@@ -97,8 +97,9 @@ class GrupoController extends Controller
     public function edit($id)
     {
         $grupo = Grupo::findOrFail($id);
-
-        return view('grupo.edit', compact('grupo'));
+        $coordinadores = Coordinador::all()->pluck('nombre','id');
+        $proyectos = Proyecto::all()->pluck('nombre','id');
+        return view('grupo.edit', compact('grupo','coordinadores','proyectos'));
     }
 
     /**

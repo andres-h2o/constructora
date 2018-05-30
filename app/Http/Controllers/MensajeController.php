@@ -60,7 +60,7 @@ class MensajeController extends Controller
 			'title' => 'required'
 		]);
         $requestData = $request->all();
-        
+
         Mensaje::create($requestData);
 
         return redirect('mensaje')->with('message', 'Mensaje added!');

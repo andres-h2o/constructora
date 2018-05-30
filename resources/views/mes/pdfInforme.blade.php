@@ -54,6 +54,15 @@
                     <th class="th-and" style="text-transform: uppercase">Ventas <br>a Credito</th>
                 </tr>
                 @foreach($datos as $item)
+                    @if($loop->iteration==16)
+
+                        <tr><td><br></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td><br></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td><br></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td><br></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td><br></td><td></td><td></td><td></td><td></td></tr>
+
+                    @endif
                     <tr class="tr-and">
                         <td class="th-and" style="text-transform: uppercase;text-align: left">{{ $loop->iteration}}
                             .- {{$item->vendedor}}</td>
@@ -72,7 +81,7 @@
                     <td class="th-and" style="text-transform: uppercase">
                         <strong>$us.- {{number_format($totalContado, 2, ',', '.')}}</strong>
                     </td>
-                    <td class="th-and" ><strong>{{$nroTotal}}</strong> </td>
+                    <td class="th-and"><strong>{{$nroTotal}}</strong></td>
                     <td class="th-and" style="text-transform: uppercase">{{$nroContado}}</td>
                     <td class="th-and" style="text-transform: uppercase">{{$nroCredito}}</td>
                 </tr>

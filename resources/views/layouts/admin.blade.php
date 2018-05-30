@@ -101,8 +101,7 @@
         bottom:0;
         margin: auto;
         background: #83C24A;
-        height: 100px;
-        width: 200px;
+        height: 85%;
         box-shadow: 0 0 4px rgba(0,0,0,.3);
     }
     .padre {

@@ -44,8 +44,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        return redirect('/');
-        return response()->view('error.error', [], 500);
+        //return redirect('/');
+        //return response()->view('error.error', [], 500);
 
         return parent::render($request, $exception);
     }

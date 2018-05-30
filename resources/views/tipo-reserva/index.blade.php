@@ -30,7 +30,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Nombre</th><th>Dias</th><th>Dias Reales</th><th>Actions</th>
+                                        <th>#</th><th>Nombre</th><th>Dias</th><th>Dias Reales</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -38,7 +38,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
                                         <td>{{ $item->nombre }}</td><td>{{ $item->dias }}</td><td>{{ $item->dias_reales }}</td>
-                                        <td>
+                                        {{--<td>
                                             <a href="{{ url('/tipo-reserva/' . $item->id) }}" title="View TipoReserva"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/tipo-reserva/' . $item->id . '/edit') }}" title="Edit TipoReserva"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
 
@@ -47,7 +47,7 @@
                                                 {{ csrf_field() }}
                                                 <button type="submit" class="btn btn-danger btn-sm" title="Delete TipoReserva" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                                             </form>
-                                        </td>
+                                        </td>--}}
                                     </tr>
                                 @endforeach
                                 </tbody>

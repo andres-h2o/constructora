@@ -636,4 +636,49 @@ class WebServicesController extends Controller
             )->orderBy('id','desc')->get();
         return json_encode(array("mensajes"=>$mensajes));
     }
+
+    public function ventasSinPunto()
+{
+    $puestos=Puesto::join('ventas as v','v.id_puesto','puestos.id')
+        ->join('bloques as b','b.id','=','id_bloque')
+        ->join('modulos as m','m.id','=','id_modulo')
+        ->where('v.estado_venta','=',1)
+        ->where('m.id_proyecto','=',1)
+        ->where('longitud','=',-63)
+        ->select(
+            'puestos.id as id',
+            'puestos.nro as puesto',
+            'b.numero as bloque'
+        )->get();
+    return json_encode(array("puestos"=>$puestos));
+}
+
+    public function guardarUbicacion($id, $latitud, $longitud)
+    {
+        Puesto::find($id)->update([
+            "latitud"=>$latitud,
+            "longitud"=>$longitud
+        ]);
+        return json_encode(array("confirmacion"=>1));
+    }
+
+    public function ventasUbicacion($id_vendedor)
+    {
+        $id_proyecto = Vendedor::join('grupos as g', 'g.id', 'id_grupo')
+            ->where('vendedors.id', '=', $id_vendedor)->get()->first()->id_proyecto;
+        $puestos=Puesto::join('ventas as v','v.id_puesto','puestos.id')
+            ->join('bloques as b','b.id','=','id_bloque')
+            ->join('modulos as m','m.id','=','id_modulo')
+            ->where('v.estado_venta','=',1)
+            ->where('m.id_proyecto','=',$id_proyecto)
+            ->where('latitud','!=',-17)
+            ->select(
+                'puestos.id as id',
+                'puestos.nro as puesto',
+                'b.numero as bloque',
+                'latitud',
+                'longitud'
+            )->get();
+        return json_encode(array("puestos"=>$puestos));
+    }
 }

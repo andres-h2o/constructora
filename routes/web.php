@@ -47,6 +47,9 @@ Route::get('mes/ver-top-proyecto/{id_proyecto}', 'MesController@irTopProyecto');
 Route::get('mes/top/{id_mes}', 'MesController@irTop');
 Route::post('json-clientes', 'ClienteController@clientesVendedor');
 Route::get('cliente/ver-puestos/{id_cliente}', 'ClienteController@verPuestos');
+Route::get('vendedor/ventaspdf/{id_vendedor}', 'VendedorController@ventaspdf');
+Route::get('vendedor/ventas/{id_vendedor}', 'VendedorController@ventas');
+Route::get('venta/plan-pagos/{id_venta}', 'VentaController@planDePagos');
 
 
 Route::resource('proyecto', 'ProyectoController');
@@ -98,5 +101,10 @@ Route::get('top/diario/{id_vendedor}', 'WebServicesController@mostrarTopDiario')
 Route::get('cliente/contra/{id_vendedor}/{contra1}/{contra2}', 'WebServicesController@cambiarPassword');
 Route::get('trabajadores/{id_vendedor}', 'WebServicesController@trabajadores');
 Route::get('mensajes/{id_vendedor}', 'WebServicesController@mensajes');
+Route::get('puestos-ubicacion', 'WebServicesController@ventasSinPunto');
+Route::get('ubicacion-guardar/{id}/{latitud}/{longitud}', 'WebServicesController@guardarUbicacion');
+Route::get('ubicacion-ver/{id_vendedor}', 'WebServicesController@ventasUbicacion');
 
 Route::resource('mensaje', 'MensajeController');
+
+Route::post('prueba','WebServicesController@prueba');

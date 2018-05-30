@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 
 @section('contenido')
-<style>
+    <style>
 
-</style>
+    </style>
     <div class="container">
         <div class="row">
 
@@ -12,11 +12,12 @@
                 <div class="card">
                     <br>
                     <a class="button" style="font-size: 10px;" title="Ir atras" href="{{ URL::previous() }}">
-                        <span class="dashicons dashicons-admin-generic"></span><i class="fa fa-mail-reply"></i> Volver Atras
+                        <span class="dashicons dashicons-admin-generic"></span><i class="fa fa-mail-reply"></i> Volver
+                        Atras
                     </a>
                     <div class="card-header"><h2><strong>Ver Detalles de Venta</strong><br><br></h2>
                         <h3><strong>{{ $puesto->proyecto }} <br>
-                            </strong> Módulo  : {{ $puesto->modulo }} ---  Bloque  : {{ $puesto->bloque }}
+                            </strong> Módulo : {{ $puesto->modulo }} --- Bloque : {{ $puesto->bloque }}
                             --- Puesto <strong>{{ $puesto->numero }}</strong></h3>
                     </div>
                     <div class="card-body">
@@ -51,7 +52,8 @@
                                 <div class="col-md-offset-4 col-md-4">
                                     <br>
                                     <input class="btn btn-primary" type="submit"
-                                           value="{{  'Actualizar' }}" onclick="return confirm('Seguro que desea Actualizar el estado de la venta?')">
+                                           value="{{  'Actualizar' }}"
+                                           onclick="return confirm('Seguro que desea Actualizar el estado de la venta?')">
                                 </div>
                             </div>
 
@@ -60,14 +62,22 @@
 
 
 
-
-
-
-
                     </div>
                 </div>
             </div>
         </div>
+        <div style="display: flex;justify-content: center">
+            @if($tipoVenta->id==2)
+                <br><br>
+                <a style="align-content: center" href="{{ url('/venta/plan-pagos/' . $venta->id ) }}"
+                   title="Ventas" target="_blank">
+                    <button class="btn btn-red "><i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                        Imprimir Plan de Pagos
+                    </button>
+                </a>
+            @endif
+        </div>
+
     </div>
 
     {{--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

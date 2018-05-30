@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Categorium;
+use App\Cliente;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Puesto;
+use App\TipoVentum;
+use App\Vendedor;
 use App\Ventum;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -161,5 +166,30 @@ class VentaController extends Controller
         $puesto =Puesto::find($venta->id_puesto);
 
         return redirect('cliente/ver-puestos/'.$venta->id_cliente."");
+    }
+
+    public function planDePagos($id_venta)
+    {
+        $venta=Ventum::find($id_venta);
+        $categoria=Categorium::join('puestos as p','p.id_categoria','=','categorias.id')
+            ->where('p.id','=',$venta->id_puesto)->get()->first();
+
+        for ($i=1;$i<=$categoria->plazo_meses;$i++){
+            $fecha=Carbon::createFromFormat('Y-m-d', $venta->fecha)->addMonth($i)->toDateString();
+            $datos['cuota']=$i;
+            $datos['fecha']=$fecha;
+            $datos['monto']=$categoria->cuota_mensual;
+            $cuota[$i]=$datos;
+        }
+        $puesto = Puesto::_getPuesto($venta->id_puesto);
+        $tipoVenta =TipoVentum::find($venta->id_tipo_venta);
+        $cliente = Cliente::find($venta->id_cliente);
+        $vendedor = Vendedor::find($venta->id_vendedor);
+        $pdf = \PDF::loadView('reportes.pdfPlanDePagos', compact(
+            'cuota',
+            'venta','cliente', 'vendedor','puesto','tipoVenta'
+        ));
+        return $pdf->stream('Plan de Pago Venta ' . $venta->id . '.pdf');
+
     }
 }

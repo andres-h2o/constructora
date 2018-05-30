@@ -219,15 +219,15 @@ class MesController extends Controller
         $totalCredito = 0;
 
         $nroTotal = 0;
-        $nroContado=0;
-        $nroCredito=0;
+        $nroContado = 0;
+        $nroCredito = 0;
         foreach ($datos as $item) {
             $total = $total + $item->montoContado + $item->montoCredito;
             $totalContado = $totalContado + $item->montoContado;
-            $totalCredito = $totalCredito +$item->montoCredito;
+            $totalCredito = $totalCredito + $item->montoCredito;
             $nroTotal = $nroTotal + $item->nroContado + $item->nroCredito;
-            $nroContado = $nroContado + $item->nroContado ;
-            $nroCredito = $nroCredito +$item->nroCredito;
+            $nroContado = $nroContado + $item->nroContado;
+            $nroCredito = $nroCredito + $item->nroCredito;
         }
         $proyecto = Proyecto::find($id_proyecto);
         $pdf = \PDF::loadView('mes.pdfInformeGeneral', compact(
@@ -243,6 +243,7 @@ class MesController extends Controller
         $pdf->setPaper("letter", "landscape");
         return $pdf->stream('Informe de Ventas ' . $proyecto->nombre . '.pdf');
     }
+
     public function informeGeneral($id_mes)
     {
 
@@ -260,15 +261,15 @@ class MesController extends Controller
         $totalCredito = 0;
 
         $nroTotal = 0;
-        $nroContado=0;
-        $nroCredito=0;
+        $nroContado = 0;
+        $nroCredito = 0;
         foreach ($datos as $item) {
             $total = $total + $item->montoContado + $item->montoCredito;
             $totalContado = $totalContado + $item->montoContado;
-            $totalCredito = $totalCredito +$item->montoCredito;
+            $totalCredito = $totalCredito + $item->montoCredito;
             $nroTotal = $nroTotal + $item->nroContado + $item->nroCredito;
-            $nroContado = $nroContado + $item->nroContado ;
-            $nroCredito = $nroCredito +$item->nroCredito;
+            $nroContado = $nroContado + $item->nroContado;
+            $nroCredito = $nroCredito + $item->nroCredito;
         }
         $mes = Me::find($id_mes);
         $proyecto = Proyecto::find($mes->id_proyecto);
@@ -329,7 +330,7 @@ class MesController extends Controller
             ->orderBy('nro', 'desc')->get();
         $lista = array();
         foreach ($trabajadores as $item) {
-            $ventasContado = Ventum::join('mes','mes.id','=','id_mes')
+            $ventasContado = Ventum::join('mes', 'mes.id', '=', 'id_mes')
                 ->where('id_proyecto', '=', $id_proyecto)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('id_tipo_venta', '=', 1)
@@ -337,7 +338,7 @@ class MesController extends Controller
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $ventasContado = ($ventasContado != "") ? $ventasContado->nro : 0;
-            $ventasCredito = Ventum::join('mes','mes.id','=','id_mes')
+            $ventasCredito = Ventum::join('mes', 'mes.id', '=', 'id_mes')
                 ->where('id_proyecto', '=', $id_proyecto)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('id_tipo_venta', '=', 2)
@@ -345,7 +346,7 @@ class MesController extends Controller
                 ->select('id_vendedor', DB::raw('count(*) as nro'))
                 ->groupBy('id_vendedor')->get()->first();
             $ventasCredito = ($ventasCredito != "") ? $ventasCredito->nro : 0;
-            $reservas = Reserva::join('mes','mes.id','=','id_mes')
+            $reservas = Reserva::join('mes', 'mes.id', '=', 'id_mes')
                 ->where('id_proyecto', '=', $id_proyecto)
                 ->where('id_vendedor', '=', $item->id)
                 ->where('reservas.estado', '=', 1)
@@ -358,7 +359,7 @@ class MesController extends Controller
                 "credito" => $ventasCredito,
                 "reserva" => $reservas,
                 "puntos" => $ventasCredito + $ventasContado,
-                "imagen"=>$item->imagen
+                "imagen" => $item->imagen
             ));
         }
         return view('mes.top-proyecto', compact('lista', 'trabajadores'));
@@ -412,7 +413,7 @@ class MesController extends Controller
                 "puntos" => $ventasCredito + $ventasContado,
                 "falta" => 50 - ($ventasCredito + $ventasContado),
                 "meta" => 50,
-                "imagen"=>$item->imagen
+                "imagen" => $item->imagen
             ));
         }
         return view('mes.top', compact('lista', 'trabajadores'));
@@ -472,7 +473,7 @@ class MesController extends Controller
                 "puntos" => $ventasCredito + $ventasContado,
                 "falta" => 50 - ($ventasCredito + $ventasContado),
                 "meta" => 50,
-                "imagen"=>$item->imagen
+                "imagen" => $item->imagen
             ));
         }
         return view('mes.top-diario', compact('lista', 'trabajadores'));

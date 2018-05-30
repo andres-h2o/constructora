@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Mensaje;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,6 +25,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        Mensaje::create([
+            "title"=>"prueba tarea",
+            "content"=>"prueba tarea programada-- ignore este mensaje",
+            "id_proyecto"=>1,
+
+        ]);
         // $schedule->command('inspire')
         //          ->hourly();
     }
