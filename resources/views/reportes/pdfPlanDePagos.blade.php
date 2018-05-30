@@ -78,14 +78,18 @@
             <table>
                 <tr>
                     <th style="text-transform: uppercase">Nro</th>
-                    <th style="text-transform: uppercase">Fecha</th>
+                    <th style="width: 10%;text-transform: uppercase">Fecha</th>
+                    <th style=" width: 20%; ;text-transform: uppercase"></th>
+                    <th style="text-transform: uppercase"></th>
                     <th style="text-transform: uppercase">Monto</th>
                 </tr>
                 @foreach($cuota as $item)
 
                     <tr>
                         <td style="text-transform: uppercase;text-align: left">{{$item['cuota']}}</td>
-                        <td style="text-transform: uppercase">{{$item['fecha']}}</td>
+                        <td >{{Jenssegers\Date\Date:: parse($item['fecha'])->format('d ')}} de</td>
+                        <td style="text-transform: capitalize">{{Jenssegers\Date\Date:: parse($item['fecha'])->format('F')}}</td>
+                        <td style="text-transform: capitalize">{{Jenssegers\Date\Date:: parse($item['fecha'])->format('Y')}}</td>
                         <td style="text-transform: uppercase">{{$item['monto']}} $us.</td>
                     </tr>
                 @endforeach

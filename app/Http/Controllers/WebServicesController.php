@@ -499,7 +499,8 @@ class WebServicesController extends Controller
 
         $trabajadores = Vendedor::join('ventas as v', 'v.id_vendedor', '=', 'vendedors.id')
             ->join('grupos as g', 'g.id', '=', 'vendedors.id_grupo')
-            ->where('id_proyecto', '=', $mes->id_proyecto)
+            ->where('id_mes', '=', $id_mes)
+            ->where('id_proyecto', '=', $id_proyecto)
             ->where('estado_venta', '=', 1)
             ->select(
                 'vendedors.id as id',
@@ -636,22 +637,21 @@ class WebServicesController extends Controller
             )->orderBy('id','desc')->get();
         return json_encode(array("mensajes"=>$mensajes));
     }
-
     public function ventasSinPunto()
-{
-    $puestos=Puesto::join('ventas as v','v.id_puesto','puestos.id')
-        ->join('bloques as b','b.id','=','id_bloque')
-        ->join('modulos as m','m.id','=','id_modulo')
-        ->where('v.estado_venta','=',1)
-        ->where('m.id_proyecto','=',1)
-        ->where('longitud','=',-63)
-        ->select(
-            'puestos.id as id',
-            'puestos.nro as puesto',
-            'b.numero as bloque'
-        )->get();
-    return json_encode(array("puestos"=>$puestos));
-}
+    {
+        $puestos=Puesto::join('ventas as v','v.id_puesto','puestos.id')
+            ->join('bloques as b','b.id','=','id_bloque')
+            ->join('modulos as m','m.id','=','id_modulo')
+            ->where('v.estado_venta','=',1)
+            ->where('m.id_proyecto','=',1)
+            ->where('longitud','=',-63)
+            ->select(
+                'puestos.id as id',
+                'puestos.nro as puesto',
+                'b.numero as bloque'
+            )->orderBy('puestos.id','asc')->get();
+        return json_encode(array("puestos"=>$puestos));
+    }
 
     public function guardarUbicacion($id, $latitud, $longitud)
     {
@@ -661,7 +661,6 @@ class WebServicesController extends Controller
         ]);
         return json_encode(array("confirmacion"=>1));
     }
-
     public function ventasUbicacion($id_vendedor)
     {
         $id_proyecto = Vendedor::join('grupos as g', 'g.id', 'id_grupo')

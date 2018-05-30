@@ -21,6 +21,7 @@ class VentaController extends Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -66,15 +67,15 @@ class VentaController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'fecha' => 'required',
-			'monto' => 'required',
-			'id_puesto' => 'required',
-			'id_vendedor' => 'required',
-			'id_mes' => 'required',
-			'id_tipo_venta' => 'required'
-		]);
+            'fecha' => 'required',
+            'monto' => 'required',
+            'id_puesto' => 'required',
+            'id_vendedor' => 'required',
+            'id_mes' => 'required',
+            'id_tipo_venta' => 'required'
+        ]);
         $requestData = $request->all();
-        
+
         Ventum::create($requestData);
 
         return redirect('venta')->with('flash_message', 'Ventum added!');
@@ -83,7 +84,7 @@ class VentaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      *
      * @return \Illuminate\View\View
      */
@@ -97,7 +98,7 @@ class VentaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      *
      * @return \Illuminate\View\View
      */
@@ -112,22 +113,22 @@ class VentaController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param  int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-			'fecha' => 'required',
-			'monto' => 'required',
-			'id_puesto' => 'required',
-			'id_vendedor' => 'required',
-			'id_mes' => 'required',
-			'id_tipo_venta' => 'required'
-		]);
+            'fecha' => 'required',
+            'monto' => 'required',
+            'id_puesto' => 'required',
+            'id_vendedor' => 'required',
+            'id_mes' => 'required',
+            'id_tipo_venta' => 'required'
+        ]);
         $requestData = $request->all();
-        
+
         $ventum = Ventum::findOrFail($id);
         $ventum->update($requestData);
 
@@ -137,7 +138,7 @@ class VentaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -147,6 +148,7 @@ class VentaController extends Controller
 
         return redirect('venta')->with('flash_message', 'Ventum deleted!');
     }
+
     public function actualizarVenta(Request $request, $id_venta)
     {
         $this->validate($request, [
@@ -154,40 +156,46 @@ class VentaController extends Controller
         ]);
 
         Ventum::find($id_venta)->update([
-            'estado_venta'=>$request['estado']
+            'estado_venta' => $request['estado']
         ]);
-        $venta=Ventum::find($id_venta);
-        if($request['estado']==0){
+        $venta = Ventum::find($id_venta);
+        if ($request['estado'] == 0) {
             Puesto::find($venta->id_puesto)->update([
-                'estado'=>"libre"
+                'estado' => "libre"
             ]);
             Session::flash('message', 'Venta Anulada correctamente!');
         }
-        $puesto =Puesto::find($venta->id_puesto);
+        $puesto = Puesto::find($venta->id_puesto);
 
-        return redirect('cliente/ver-puestos/'.$venta->id_cliente."");
+        return redirect('cliente/ver-puestos/' . $venta->id_cliente . "");
     }
 
     public function planDePagos($id_venta)
     {
-        $venta=Ventum::find($id_venta);
-        $categoria=Categorium::join('puestos as p','p.id_categoria','=','categorias.id')
-            ->where('p.id','=',$venta->id_puesto)->get()->first();
+        $venta = Ventum::find($id_venta);
+        $categoria = Categorium::join('puestos as p', 'p.id_categoria', '=', 'categorias.id')
+            ->where('p.id', '=', $venta->id_puesto)->get()->first();
 
-        for ($i=1;$i<=$categoria->plazo_meses;$i++){
-            $fecha=Carbon::createFromFormat('Y-m-d', $venta->fecha)->addMonth($i)->toDateString();
-            $datos['cuota']=$i;
-            $datos['fecha']=$fecha;
-            $datos['monto']=$categoria->cuota_mensual;
-            $cuota[$i]=$datos;
+        for ($i = 1; $i <= $categoria->plazo_meses; $i++) {
+
+            $fecha = Carbon::createFromFormat('Y-m-d', $venta->fecha)->addMonth($i);
+            if ($fecha->isSunday()) {
+                $fecha->addDay(1);
+
+            }
+            $fecha = $fecha->toDateString();
+            $datos['cuota'] = $i;
+            $datos['fecha'] = $fecha;
+            $datos['monto'] = $categoria->cuota_mensual;
+            $cuota[$i] = $datos;
         }
         $puesto = Puesto::_getPuesto($venta->id_puesto);
-        $tipoVenta =TipoVentum::find($venta->id_tipo_venta);
+        $tipoVenta = TipoVentum::find($venta->id_tipo_venta);
         $cliente = Cliente::find($venta->id_cliente);
         $vendedor = Vendedor::find($venta->id_vendedor);
         $pdf = \PDF::loadView('reportes.pdfPlanDePagos', compact(
             'cuota',
-            'venta','cliente', 'vendedor','puesto','tipoVenta'
+            'venta', 'cliente', 'vendedor', 'puesto', 'tipoVenta'
         ));
         return $pdf->stream('Plan de Pago Venta ' . $venta->id . '.pdf');
 
